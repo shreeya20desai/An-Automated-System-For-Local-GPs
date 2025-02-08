@@ -2,7 +2,7 @@
 
 ## Project title: _[Insert your project title here]_
 
-### Student name: Shreeya Dinesh
+### Student name: Shreeya
 
 ### Student email: sdd13@student.le.ac.uk
 
