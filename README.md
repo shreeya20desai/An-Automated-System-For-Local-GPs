@@ -1,12 +1,15 @@
 [comment]: # "You may find the following markdown cheat sheet useful: https://www.markdownguide.org/cheat-sheet/. You may also consider using an online Markdown editor such as StackEdit or makeareadme."
 
-## Project title: _[Insert your project title here]_
+## Project title: An Automated System For Local GPs
 
-### Student name: Shreeya
+### Student name: Shreeya Dinesh Desai.
 
 ### Student email: sdd13@student.le.ac.uk
 
 ### Project description:
+
+An Automated System for Local GPs, mainly aims in solving the current problems faced by the patients , Doctor and Nurses. With the help of this project, the main goal
+is to design a user friendly webapp, application scheduling for patients, availability setting for Doctor and Nurses, manage prescription, reduced time involved for appoinment booking ,and deployment of the application on one of the Cloud provider(Azure/AWS/GCP).
 
 _[Add your project description here, these will typically be around 100-150 words long]_
 
@@ -16,24 +19,24 @@ _[Add your project description here, these will typically be around 100-150 word
 
 Essential:
 
-- [Essential requirement 1]
-- [Essential requirement 2]
-- [Essential requirement 3]
-- [Essential requirement *n*]
+- Registration: The patient will be able to register themselves and add/upload their previous Medical history to the webapp.
+- Availability: The Doctor and Nurses could set their availability for the respective day/week/month.
+- Book appoinment:The patient according to their time can book the appoinment with the available Doctor/Nurse.
+- Provide prescription: The Doctor will be able provide prescription to the patient and during the next visit Doctor can view the previous provided prescriptions.
 
 Desirable:
 
-- [Desirable requirement 1]
-- [Desirable requirement 2]
-- [Desirable requirement 3]
-- [Desirable requirement *n*]
+- Deployment on the cloud: The application/website will be deployed on either of the cloud provider such as Microsoft Azure/Amazon Web Service /Google Cloud Platform.
+- Articles for minor injuries & awareness: Inorder to tackle mild external injuries, Articles will be provided inorder to take safety measures at home which will reduce some workload for the Doctor / Nurse .
+- View prescription: The patient will be able to view the prescription provided by the Doctor/Nurse online.
+- Preview Medical History: The medical history of the patient could be viewed by the Doctor which will help to know the prior medical history.
+- Buy and Pay prescriptions: For the prescibed medicine the patient can buy and pay for the prescription itself.
 
 Optional:
 
-- [Optional requirement 1]
-- [Optional requirement 2]
-- [Optional requirement 3]
-- [Optional requirement *n*]
+- One to one chat: Due shortage of Doctor/Nurse, if incase there's a follow-up required for a specific patient or a patient requires immediate attention the chat feature can be leverage.
+- Feedback: The patient could provide a feedback to the Doctor/Nurse with regards to the consulatation provided.
+- Email Confirmation: Once the appoinment is booked, an email Confirmation will be sent to the patient.
 
 ## Information about this repository
 
