@@ -9,7 +9,7 @@
 ### Project description:
 
 An Automated System for Local GPs, mainly aims in solving the current problems faced by the patients , Doctor and Nurses. With the help of this project, the main goal
-is to design a user friendly webapp, application scheduling for patients, availability setting for Doctor and Nurses, manage prescription, reduced time involved for appoinment booking ,and deployment of the application on one of the Cloud provider(Azure/AWS/GCP).
+is to design a user friendly webapp, appoinment scheduling for patients, availability setting for Doctor and Nurses, manage prescription, reduced time involved for appoinment booking ,and deployment of the application on one of the Cloud provider(Azure/AWS/GCP).
 
 ### List of requirements (objectives):
 
