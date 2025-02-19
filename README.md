@@ -8,8 +8,7 @@
 
 ### Project description:
 
-An Automated System for Local GPs, mainly aims in solving the current problems faced by the patients , Doctor and Nurses. With the help of this project, the main goal
-is to design a user friendly webapp, appoinment scheduling for patients, availability setting for Doctor and Nurses, manage prescription, reduced time involved for appoinment booking ,and deployment of the application on one of the Cloud provider(Azure/AWS/GCP).
+An Automated System for Local GPs, mainly aims in solving the current problems faced by the patients , Doctor and Nurses. With the help of this project, the main goal is to design a user friendly webapp, appointment scheduling for patients, availability setting for Doctor and Nurses, manage prescription, reduced time involved for appointment booking ,and deployment of the application on one of the Cloud provider(Azure/AWS/GCP).
 
 ### List of requirements (objectives):
 
@@ -19,7 +18,7 @@ Essential:
 
 - Registration: The patient will be able to register themselves and add/upload their previous Medical history to the webapp.
 - Availability: The Doctor and Nurses could set their availability for the respective day/week/month.
-- Book appoinment:The patient according to their time can book the appoinment with the available Doctor/Nurse.
+- Book appointment:The patient according to their time can book the appointment with the available Doctor/Nurse.
 - Provide prescription: The Doctor will be able provide prescription to the patient and during the next visit Doctor can view the previous provided prescriptions.
 
 Desirable:
@@ -34,7 +33,7 @@ Optional:
 
 - One to one chat: Due shortage of Doctor/Nurse, if incase there's a follow-up required for a specific patient or a patient requires immediate attention the chat feature can be leverage.
 - Feedback: The patient could provide a feedback to the Doctor/Nurse with regards to the consulatation provided.
-- Email Confirmation: Once the appoinment is booked, an email Confirmation will be sent to the patient.
+- Email Confirmation: Once the appointment is booked, an email Confirmation will be sent to the patient.
 
 ## Information about this repository
 
