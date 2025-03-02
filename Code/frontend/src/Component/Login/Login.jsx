@@ -65,18 +65,12 @@ const Login = () => {
           <button
             className="register-btn"
             type="button"
-            onClick={() => "../Register"}
+            onClick={() => navigate("/register")}
+            style={{ cursor: "pointer" }}
+            // onClick={() => "../Register/Register.jsx"}
           >
             REGISTER HERE
           </button>
-
-          {/* <a
-            className="register-btn"
-            onClick={() => navigate("../Register")}
-            style={{ cursor: "pointer" }}
-          >
-            REGISTER HERE
-          </a> */}
         </div>
       </form>
     </div>
