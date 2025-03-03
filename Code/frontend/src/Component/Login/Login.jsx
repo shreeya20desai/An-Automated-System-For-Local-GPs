@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import "./Login.css";
-import Image from "../../Assets/Image1.png"; //Image from Google https://www.google.com/search?q=hospital+management+images+&sca_esv=12555c0b9fcc47a6&udm=2&biw=1536&bih=695&sxsrf=AHTn8zr0dM5q1a70OBxTFI6gQzBmKkYTUA%3A1740743358605&ei=vqLBZ6nTJJLPhbIPg6eC-AY&ved=0ahUKEwipqqOspuaLAxWSZ0EAHYOTAG8Q4dUDCBE&uact=5&oq=hospital+management+images+&gs_lp=EgNpbWciG2hvc3BpdGFsIG1hbmFnZW1lbnQgaW1hZ2VzIDIFEAAYgAQyBhAAGAgYHjIGEAAYCBgeMgYQABgIGB4yBhAAGAgYHjIGEAAYCBgeMgYQABgIGB5I_QRQugJYugJwAHgAkAEAmAFWoAGLAaoBATK4AQPIAQD4AQGYAgGgAmSYAwDiAwUSATEgQIgGAZIHAzAuMaAHhgU&sclient=img#imgrc=a6i6ZCYTdL-CYM&imgdii=mq2RMqRVs0kdgM
-import { FaEnvelope, FaLock } from "react-icons/fa"; //https://react-icons.github.io/react-icons/search/#q=lock
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Image from "../../Assets/Image1.png";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
-const Login = () => {
+function UserLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -16,65 +20,94 @@ const Login = () => {
       setError("Please fill in the fields");
     } else {
       setError("");
-      console.log("Sucessfully Logged In");
+      console.log("Successfully Logged In");
     }
   };
 
   return (
-    <div className="login">
-      <img src={Image} alt="Login" className="image" />
+    <Container className="d-flex justify-content-center align-items-center vh-100">
+      <Card className="card">
+        <Row className="row">
+          <Col md={6} className="image-container d-none d-md-flex">
+            <img src={Image} alt="Login" className="image" />
+          </Col>
 
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h1>LOGIN</h1>
-        {error && <p className="message-error">{error}</p>}
-
-        <div className="input-form">
-          {/* <label className="Email">Email Address:</label> */}
-          <input
-            type="email"
-            placeholder="Enter your Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <FaEnvelope className="icons" />
-        </div>
-
-        <div className="input-form">
-          {/* <label className="Password">Password</label> */}
-          <input
-            type="password"
-            placeholder="Enter your Password"
-            value={password}
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <FaLock className="icons" />
-        </div>
-
-        <button className="login-btn" type="submit">
-          LOGIN
-        </button>
-
-        <div className="register">
-          <p className="reg-p">
-            {" "}
-            Don't Have An Account? <br />
-          </p>
-
-          <button
-            className="register-btn"
-            type="button"
-            onClick={() => navigate("/register")}
-            style={{ cursor: "pointer" }}
-            // onClick={() => "../Register/Register.jsx"}
+          <Col
+            xs={12}
+            md={6}
+            className="p-4 d-flex flex-column justify-content-center"
           >
-            REGISTER HERE
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-};
+            <h1
+              className="text-center"
+              style={{ fontFamily: "Poppins", fontWeight: "450" }}
+            >
+              LOGIN
+            </h1>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3 position-relative">
+                <input
+                  type="email"
+                  placeholder="Enter Your Email"
+                  className="form-control"
+                  style={{ width: "100%", height: "50px" }}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <FaEnvelope className="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" />
+              </div>
 
-export default Login;
+              <div className="mb-3 position-relative">
+                <input
+                  type="password"
+                  placeholder="Enter Your Password"
+                  className="form-control"
+                  style={{ width: "100%", height: "50px" }}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <FaLock className="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" />
+              </div>
+
+              {error && <p className="text-danger">{error}</p>}
+              <div className="d-flex justify-content-center">
+                <button
+                  type="submit"
+                  className="btn btn-dark"
+                  style={{ fontWeight: "bold" }}
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                >
+                  Login
+                </button>
+              </div>
+
+              <div className="d-flex flex-column align-items-center mt-4">
+                <p className="mb-4" style={{ fontWeight: "bold" }}>
+                  Don't have an account?
+                </p>
+                <button
+                  className="btn btn-dark"
+                  type="button"
+                  style={{ fontWeight: "bold" }}
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  onClick={() => navigate("/register")}
+                >
+                  REGISTER HERE
+                </button>
+              </div>
+            </form>
+          </Col>
+        </Row>
+      </Card>
+    </Container>
+  );
+}
+
+export default UserLogin;
