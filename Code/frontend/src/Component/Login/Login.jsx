@@ -24,6 +24,8 @@ function UserLogin() {
     }
   };
 
+  // https://react-bootstrap.github.io/docs/layout/grid/#setting-column-widths-in-row
+
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100">
       <Card className="card">
@@ -39,7 +41,7 @@ function UserLogin() {
           >
             <h1
               className="text-center"
-              style={{ fontFamily: "Poppins", fontWeight: "450" }}
+              style={{ fontFamily: "Poppins", fontWeight: "bold" }}
             >
               LOGIN
             </h1>
@@ -47,7 +49,7 @@ function UserLogin() {
               <div className="mb-3 position-relative">
                 <input
                   type="email"
-                  placeholder="Enter Your Email"
+                  placeholder="Enter Your Email Address"
                   className="form-control"
                   style={{ width: "100%", height: "50px" }}
                   value={email}
