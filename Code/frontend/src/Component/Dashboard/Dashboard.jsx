@@ -7,6 +7,8 @@ import {
   Button,
   Navbar,
   Nav,
+  Table,
+  CardBody,
 } from "react-bootstrap";
 import {
   FaUser,
@@ -75,7 +77,7 @@ export default function Dashboard() {
 
       {/* {Left Side Navbar} */}
       {/* {https://getbootstrap.com/docs/4.4/utilities/sizing/} */}
-      <Container fluid>
+      <Container fluid style={{ paddingTop: "76px" }}>
         <Row>
           <Col
             className="h-100 d-inline-block"
@@ -85,7 +87,7 @@ export default function Dashboard() {
             style={{
               backgroundColor: "#041D4A",
               position: "fixed",
-              paddingTop: "60px",
+              paddingTop: "56px",
               bottom: 0,
               // height: "cal(100vh - 56px)", https://stackoverflow.com/questions/52941346/css-height-calc100vh-vs-height-100vh
             }}
