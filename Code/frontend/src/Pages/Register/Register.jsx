@@ -7,6 +7,7 @@ import "../Login/Login.css";
 import Image from "../../Assets/Image1.png"; //Image from Google https://www.google.com/search?q=hospital+management+images+&sca_esv=12555c0b9fcc47a6&udm=2&biw=1536&bih=695&sxsrf=AHTn8zr0dM5q1a70OBxTFI6gQzBmKkYTUA%3A1740743358605&ei=vqLBZ6nTJJLPhbIPg6eC-AY&ved=0ahUKEwipqqOspuaLAxWSZ0EAHYOTAG8Q4dUDCBE&uact=5&oq=hospital+management+images+&gs_lp=EgNpbWciG2hvc3BpdGFsIG1hbmFnZW1lbnQgaW1hZ2VzIDIFEAAYgAQyBhAAGAgYHjIGEAAYCBgeMgYQABgIGB4yBhAAGAgYHjIGEAAYCBgeMgYQABgIGB5I_QRQugJYugJwAHgAkAEAmAFWoAGLAaoBATK4AQPIAQD4AQGYAgGgAmSYAwDiAwUSATEgQIgGAZIHAzAuMaAHhgU&sclient=img#imgrc=a6i6ZCYTdL-CYM&imgdii=mq2RMqRVs0kdgM
 import { FaEnvelope, FaLock, FaUser, FaTransgender } from "react-icons/fa"; //https://react-icons.github.io/react-icons/search/#q=lock
 import { useNavigate } from "react-router-dom";
+import RegisterButton from "../../Components/RegisterButton";
 
 const Register = () => {
   const [fullName, setFullName] = useState("");
@@ -139,19 +140,7 @@ const Register = () => {
                 <FaLock className="position-absolute top-50 end-0 translate-middle-y me-3 " />
               </div>
 
-              <div className="d-flex flex-column align-items-center mt-3">
-                <button
-                  className="btn btn-dark"
-                  type="button"
-                  style={{ fontWeight: "bold" }}
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                >
-                  REGISTER
-                </button>
-              </div>
+              <RegisterButton />
             </form>
           </Col>
         </Row>
