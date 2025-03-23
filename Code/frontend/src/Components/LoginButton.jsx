@@ -8,7 +8,7 @@ function LoginButton({ onSubmit }) {
       style={{ fontWeight: "bold" }}
       onClick={onSubmit}
     >
-      Login
+      LOGIN
     </button>
   );
 }

@@ -7,14 +7,15 @@ import Col from "react-bootstrap/Col";
 import LoginForm from "../../Components/LoginForm.jsx";
 import LoginButton from "../../Components/LoginButton.jsx";
 import RegisterButton from "../../Components/RegisterButton.jsx";
+import StaffLoginButton from "../../Components/StaffLoginButton.jsx";
 import Image from "../../../src/Assets/Image1.png";
 import "./Login.css";
 
 function UserLogin() {
   const navigate = useNavigate();
 
-  const handleLoginSubmit = () => {
-    navigate("/dashboard"); // Navigate to Dashboard After Successfully Logged In
+  const handleSubmit = () => {
+    navigate("/dashboard");
   };
 
   return (
@@ -31,17 +32,22 @@ function UserLogin() {
           >
             <h1
               className="text-center"
-              style={{ fontFamily: "Poppins", fontWeight: "bold" }}
+              style={{ fontFamily: "Poppins", fontWeight: "revert-layer" }}
             >
               LOGIN
             </h1>
 
             {/* Imported The LoginFrom From Components */}
-            <LoginForm onLoginSuccess={handleLoginSubmit} />
+            <LoginForm onLoginSuccess={handleSubmit} />
 
             {/* Imported The LoginButton From Components */}
             <div className="d-flex justify-content-center">
-              <LoginButton onSubmit={handleLoginSubmit} />
+              <LoginButton onSubmit={handleSubmit} />
+            </div>
+
+            {/* Imported The StaffLoginButton From Components */}
+            <div className="d-flex justify-content-center mt-3">
+              <StaffLoginButton onSubmit={handleSubmit} />
             </div>
 
             <div className="d-flex flex-column align-items-center mt-4">
