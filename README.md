@@ -16,24 +16,26 @@ An Automated System for Local GPs, mainly aims in solving the current problems f
 
 Essential:
 
-- Registration: The patient will be able to register themselves and add/upload their previous Medical history to the webapp.
-- Availability: The Doctor and Nurses could set their availability for the respective day/week/month.
-- Book appointment:The patient according to their time can book the appointment with the available Doctor/Nurse.
-- Provide prescription: The Doctor will be able provide prescription to the patient and during the next visit Doctor can view the previous provided prescriptions.
+- Registration: The patient will be able to register to the webapp using secure login credentials, allowing them to add/upload their previous medical history. Registration of Doctors and Nurses will be performed by Admin.
+- Availability: The Doctor and Nurses will be allowed to set their availability prior to a month.
+- Book appointment: As per the need of patients they can book the appointment with the available Doctor/Nurse.
+- Provide prescription: The Doctor will be able to access medical history of patients and provide a digital prescription on the web app.
+- Admin Dashboard: The Admin Dashboard will allow administrators to add, remove healthcare staff and will also allow administrators to book appointments for aged patients.
+- Staff Dashboard: The Dashboard will help staff to set their availability, view booked appointments, provide prescriptions, view patients medical history and send prescription to pharmacy.
+- Patient Dashboard: The Dashboard will show the Doctor/Nurse Availability, book appointment, view prescriptions, upload the prior medical history, previous booked appointments records.
 
 Desirable:
 
-- Deployment on the cloud: The application/website will be deployed on either of the cloud provider such as Microsoft Azure/Amazon Web Service /Google Cloud Platform.
-- Articles for minor injuries & awareness: Inorder to tackle mild external injuries, Articles will be provided inorder to take safety measures at home which will reduce some workload for the Doctor / Nurse .
+- Deployment on the cloud
+- Articles for minor injuries & awareness: Inorder to tackle mild external injuries, Articles will be provided inorder to take safety measures at home which will reduce some staff workload.
 - View prescription: The patient will be able to view the prescription provided by the Doctor/Nurse online.
-- Preview Medical History: The medical history of the patient could be viewed by the Doctor which will help to know the prior medical history.
-- Buy and Pay prescriptions: For the prescibed medicine the patient can buy and pay for the prescription itself.
+- Buy and Pay prescriptions: For the prescribed medicine the patient can buy and pay for the prescription either online or offline.
 
 Optional:
 
 - One to one chat: Due shortage of Doctor/Nurse, if incase there's a follow-up required for a specific patient or a patient requires immediate attention the chat feature can be leverage.
-- Feedback: The patient could provide a feedback to the Doctor/Nurse with regards to the consulatation provided.
-- Email Confirmation: Once the appointment is booked, an email Confirmation will be sent to the patient.
+- Responsive Web Application.
+- Video Consultation
 
 ## Information about this repository
 
