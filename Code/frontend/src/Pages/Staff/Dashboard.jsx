@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import TopNavbar from "../../../Components/TopNavbar";
-import LeftNavbar from "../../../Components/LeftNavbar";
-import AppointmentCard from "../../../Components/AppointmentCard";
-import BookAppointmentButton from "../../../Components/BookAppointmentButton";
+import TopNavbar from "../../Components/TopNavbar";
+import LeftNavbar from "../../Components/LeftNavbar";
+import AppointmentCard from "../../Components/AppointmentCard";
+import BookAppointmentButton from "../../Components/BookAppointmentButton";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -17,26 +17,35 @@ const Dashboard = () => {
     setIsSidebarOpen(false);
   };
 
-  // NavbarLinks as props
   const navbarLinks = [
     {
       id: "appointments",
       originalName: "Appointment_Bookings",
-      displayName: "Appointment Bookings",
+      displayName: "Set Availability",
       href: "#Schedule",
     },
+
+    {
+      id: "appointments",
+      originalName: "Appointment_Bookings",
+      displayName: "Appointment",
+      href: "#Schedule",
+    },
+
     {
       id: "prescriptions",
       originalName: "Prescriptions",
       displayName: "Prescriptions",
       href: "#Medications",
     },
+
     {
       id: "records",
       originalName: "Medical Records",
       displayName: "Medical Records",
       href: "#PatientData",
     },
+
     {
       id: "profile",
       originalName: "Profile",

@@ -4,16 +4,16 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
-import LoginForm from "../../../src/Components/LoginForm.jsx";
+import LoginForm from "../../Components/LoginForm.jsx";
 import LoginButton from "../../Components/LoginButton.jsx";
 
-import "./Login.css";
+import "../Login/Login.css";
 
 function StaffLogin() {
   const navigate = useNavigate();
 
   const handleLoginSubmit = () => {
-    navigate("/");
+    navigate("/StaffDashboard");
   };
 
   return (
