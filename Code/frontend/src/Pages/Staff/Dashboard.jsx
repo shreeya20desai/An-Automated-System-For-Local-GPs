@@ -5,7 +5,7 @@ import LeftNavbar from "../../Components/LeftNavbar";
 import AppointmentCard from "../../Components/AppointmentCard";
 import BookAppointmentButton from "../../Components/BookAppointmentButton";
 
-const Dashboard = () => {
+const StaffDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [appointmentData, setAppointmentData] = useState(null);
 
@@ -68,20 +68,20 @@ const Dashboard = () => {
         <Row>
           <Col xs={12} md={{ span: 9, offset: 3 }} lg={{ span: 10, offset: 2 }}>
             <Row className="mb-4">
-              {/* Appointment Header */}
+              {/* Appointment Header will be changed */}
               <Col xs={12} className="text-center mb-4">
                 <h1 style={{ fontFamily: "sans", fontWeight: "bold" }}>
                   APPOINTMENT
                 </h1>
               </Col>
 
-              {/* Appointment Button */}
+              {/* Appointment Button will be changed later*/}
               <Col xs={12}>
                 <BookAppointmentButton />
               </Col>
             </Row>
 
-            {/* Appointment Card :shows the details of appointment */}
+            {/* Appointment Card :shows the details of appointment will be chnaged later */}
             {appointmentData && (
               <AppointmentCard
                 data={{
@@ -97,4 +97,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default StaffDashboard;

@@ -6,6 +6,7 @@ import StaffLogin from './Pages/Staff/StaffLogin.jsx'
 import Register from '../src/Pages/Register/Register.jsx'
 import Dashboard from './Pages/Patient/Dashboard/Dashboard.jsx';
 import StaffDashboard from './Pages/Staff/Dashboard.jsx';
+import AdminDashboard from './Pages/Admin/Dashboard.jsx'
 
 function App() {
   return (
@@ -16,7 +17,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/StaffDashboard" element={<StaffDashboard />} />
+        <Route path="/AdminDashboard" element={<AdminDashboard />} />
       </Routes>
+
     </BrowserRouter>
   );
 }
