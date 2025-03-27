@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Container, Row, Card, Col } from "react-bootstrap";
 import "../Login/Login.css";
 import Image from "../../Assets/Image1.png"; //Image from Google https://www.google.com/search?q=hospital+management+images+&sca_esv=12555c0b9fcc47a6&udm=2&biw=1536&bih=695&sxsrf=AHTn8zr0dM5q1a70OBxTFI6gQzBmKkYTUA%3A1740743358605&ei=vqLBZ6nTJJLPhbIPg6eC-AY&ved=0ahUKEwipqqOspuaLAxWSZ0EAHYOTAG8Q4dUDCBE&uact=5&oq=hospital+management+images+&gs_lp=EgNpbWciG2hvc3BpdGFsIG1hbmFnZW1lbnQgaW1hZ2VzIDIFEAAYgAQyBhAAGAgYHjIGEAAYCBgeMgYQABgIGB4yBhAAGAgYHjIGEAAYCBgeMgYQABgIGB5I_QRQugJYugJwAHgAkAEAmAFWoAGLAaoBATK4AQPIAQD4AQGYAgGgAmSYAwDiAwUSATEgQIgGAZIHAzAuMaAHhgU&sclient=img#imgrc=a6i6ZCYTdL-CYM&imgdii=mq2RMqRVs0kdgM
-import RegisterButton from "../../Components/RegisterButton";
 import RegisterForm from "../../Components/RegisterForm";
+import RegisterButton from "../../Components/RegisterButton";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   return (
@@ -26,6 +27,11 @@ const Register = () => {
             </h1>
             <RegisterForm />
             <RegisterButton />
+            <div>
+              <p style={{ marginTop: "2rem", fontWeight: "600" }}>
+                Already Have An Account? <Link to="/">Login</Link>
+              </p>
+            </div>
           </Col>
         </Row>
       </Card>

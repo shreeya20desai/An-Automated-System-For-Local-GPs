@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import LoginForm from "../../Components/LoginForm.jsx";
 import LoginButton from "../../Components/LoginButton.jsx";
-import RegisterButton from "../../Components/RegisterButton.jsx";
+import RegisterButtonHere from "../../Components/RegisterHereButton.jsx";
 import StaffLoginButton from "../../Components/StaffLoginButton.jsx";
 import Image from "../../../src/Assets/Image1.png";
 import "./Login.css";
@@ -56,7 +56,7 @@ function UserLogin() {
               </p>
 
               {/* Imported The RegisterButton From Components */}
-              <RegisterButton />
+              <RegisterButtonHere />
             </div>
           </Col>
         </Row>

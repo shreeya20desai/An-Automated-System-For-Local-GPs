@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
@@ -32,6 +32,17 @@ function StaffLogin() {
             </h1>
             <LoginForm onLoginSuccess={handleLoginSubmit} />
             <LoginButton onSubmit={handleLoginSubmit} />
+            <div>
+              <p
+                style={{
+                  marginTop: "2rem",
+                  textAlign: "center",
+                  fontWeight: "600",
+                }}
+              >
+                Are You Patient? <Link to="/">Login Here</Link>
+              </p>
+            </div>
           </Col>
         </Row>
       </Card>

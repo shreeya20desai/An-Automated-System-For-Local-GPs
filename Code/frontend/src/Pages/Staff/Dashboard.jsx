@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import TopNavbar from "../../Components/TopNavBar";
 import LeftNavbar from "../../Components/LeftNavBar";
 import AppointmentCard from "../../Components/AppointmentCard";
@@ -50,7 +50,7 @@ const StaffDashboard = () => {
       id: "profile",
       originalName: "Profile",
       displayName: "Profile",
-      href: "#UserInfo",
+      href: "#StaffInfo",
     },
   ];
 

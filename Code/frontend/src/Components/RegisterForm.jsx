@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaUser, FaTransgender } from "react-icons/fa"; //https://react-icons.github.io/react-icons/search/#q=lock
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const RegisterForm = () => {
   const [fullName, setFullName] = useState("");
