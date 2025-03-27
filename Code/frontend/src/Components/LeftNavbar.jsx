@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react"; //https://react.dev/learn/manipulating-the-dom-with-refs
 import { Nav, Col } from "react-bootstrap";
 import {
   FaCalendarAlt,
@@ -11,7 +11,9 @@ const LeftNavbar = ({ isOpen, onClose, links }) => {
   const menuRef = useRef(null);
 
   useEffect(() => {
+    //The LeftNavBAr will be closed when clicked outside.
     const handleClickOutside = (event) => {
+      // Checks if any click  is done outside the menuRef
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         onClose();
       }
@@ -41,6 +43,7 @@ const LeftNavbar = ({ isOpen, onClose, links }) => {
       lg={3}
       xl={3}
       xxl={3}
+      //if the NavBar is open display it in block or else d-none for small screens and d-md-block for medium screens
       className={`position-fixed text-white ${
         isOpen ? "d-block" : "d-none d-md-block"
       }`}
@@ -49,7 +52,7 @@ const LeftNavbar = ({ isOpen, onClose, links }) => {
         paddingTop: "56px",
         top: 0,
         bottom: 0,
-        width: isOpen ? "40%" : "250px", //if NavBar is open make it 40% or else fixed size of 250px.
+        width: isOpen ? "40%" : "200px", //if NavBar is open make it 40% or else fixed size of 200px.
         zIndex: 1000,
       }}
     >
@@ -57,12 +60,14 @@ const LeftNavbar = ({ isOpen, onClose, links }) => {
         className="flex-column"
         style={{ height: "100%", overflowY: "auto" }}
       >
+        {/* NavBar links */}
         {links &&
           links.map((link) => (
             <Nav.Link
               key={link.id}
               className="mt-4 mb-2"
               href={link.href}
+              onClick={link.onClick}
               style={{ color: "white" }}
             >
               {icons[link.originalName]} {link.displayName}

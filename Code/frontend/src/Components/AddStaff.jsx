@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { Card, Form, Button, Row, Col } from "react-bootstrap";
 
 const AddStaffForm = () => {
+  console.log("Add staff form rendered");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [specialization, setSpecialization] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [staffType, setStaffType] = useState(""); // No default value
+  const [staffType, setStaffType] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // logic to send the data to backend
     console.log({
       fullName,
       email,
@@ -45,7 +45,7 @@ const AddStaffForm = () => {
                 <Form.Label>Email Address</Form.Label>
                 <Form.Control
                   type="email"
-                  placeholder="Enter email"
+                  placeholder="Enter Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required

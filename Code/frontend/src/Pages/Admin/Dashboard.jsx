@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
-import TopNavbar from "../../Components/TopNavbar";
-import LeftNavbar from "../../Components/LeftNavbar";
-import AppointmentCard from "../../Components/AppointmentCard";
-import BookAppointmentButton from "../../Components/BookAppointmentButton";
+import { Container, Row, Col } from "react-bootstrap";
+import TopNavbar from "../../../src/Components/TopNavBar";
+import LeftNavbar from "../../../src/Components/LeftNavBar";
+import AddPatientForm from "../../Components/AddPatient";
+import AddStaffForm from "../../Components/AddStaff";
+import { useNavigate } from "react-router-dom";
 
-const StaffDashboard = () => {
+const AdminDashboard = () => {
+  //Controls The Visibility
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [appointmentData, setAppointmentData] = useState(null);
+  const [showAddPatientForm, setShowAddPatientForm] = useState(false);
+  const [showAddStaffForm, setShowAddStaffForm] = useState(false);
+
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -17,16 +22,38 @@ const StaffDashboard = () => {
     setIsSidebarOpen(false);
   };
 
+  //Handles the AddPatientClick
+  const handleAddPatientClick = () => {
+    setShowAddStaffForm(false);
+    setShowAddPatientForm(true);
+  };
+
+  const handlePatientFormClose = () => {
+    setShowAddPatientForm(false);
+  };
+
+  //Handles the AddStaffClick
+  const handleAddStaffClick = () => {
+    setShowAddStaffForm(true);
+    setShowAddPatientForm(false);
+  };
+
+  const handleStaffFormClose = () => {
+    setShowAddStaffForm(false);
+  };
+
   const navbarLinks = [
     {
       id: "addPatients",
       originalName: "Profile",
       displayName: "Add Patients",
+      onClick: handleAddPatientClick,
     },
     {
       id: "addDoctors",
       originalName: "Profile",
       displayName: "Add Staff",
+      onClick: handleAddStaffClick,
     },
     {
       id: "appointments",
@@ -35,6 +62,7 @@ const StaffDashboard = () => {
       href: "#Schedule",
     },
   ];
+
   return (
     <div
       style={{ backgroundColor: "#F5F5F5", minHeight: "100vh", width: "100vw" }}
@@ -46,36 +74,34 @@ const StaffDashboard = () => {
         links={navbarLinks}
       />
       <Container fluid style={{ paddingTop: "76px" }}>
-        <Row>
-          <Col xs={12} md={{ span: 9, offset: 3 }} lg={{ span: 10, offset: 2 }}>
-            <Row className="mb-4">
-              {/* Appointment Header will be changed*/}
-              <Col xs={12} className="text-center mb-4">
-                <h1 style={{ fontFamily: "sans", fontWeight: "bold" }}>
-                  APPOINTMENT
-                </h1>
-              </Col>
+        {/* Display Add PatientForm */}
+        {showAddPatientForm && (
+          <Row>
+            <Col
+              xs={12}
+              md={{ span: 9, offset: 3 }}
+              lg={{ span: 10, offset: 2 }}
+            >
+              <AddPatientForm onClose={handlePatientFormClose} />
+            </Col>
+          </Row>
+        )}
 
-              {/* Appointment Button which will be changed*/}
-              <Col xs={12}>
-                <BookAppointmentButton />
-              </Col>
-            </Row>
-
-            {/* this will be changed*/}
-            {appointmentData && (
-              <AppointmentCard
-                data={{
-                  headers: appointmentData.headers,
-                  rows: appointmentData.rows.map((row) => row.data),
-                }}
-              />
-            )}
-          </Col>
-        </Row>
+        {/* Display Add StaffForm */}
+        {showAddStaffForm && (
+          <Row>
+            <Col
+              xs={12}
+              md={{ span: 9, offset: 3 }}
+              lg={{ span: 10, offset: 2 }}
+            >
+              <AddStaffForm onClose={handleStaffFormClose} />
+            </Col>
+          </Row>
+        )}
       </Container>
     </div>
   );
 };
 
-export default StaffDashboard;
+export default AdminDashboard;

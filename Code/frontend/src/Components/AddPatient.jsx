@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { Card, Form, Button, Row, Col } from "react-bootstrap";
 
+// Reference Links
+// https://react-bootstrap.netlify.app/docs/forms/overview/
+// https://react-bootstrap.netlify.app/docs/forms/form-control
+// https://react-bootstrap.netlify.app/docs/components/buttons/
+
 const AddPatientForm = () => {
+  console.log("Add patient form rendered");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [contactNumber, setContactNumber] = useState("");
@@ -12,7 +18,6 @@ const AddPatientForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //logic to send the data to backend
     console.log({ fullName, email, contactNumber, password, dob, gender });
   };
 
@@ -102,6 +107,7 @@ const AddPatientForm = () => {
                 </Form.Select>
               </Form.Group>
 
+              {/* Can change the button color to secondary, success, warning, danger,info, dark, light */}
               <Button variant="primary" type="submit">
                 Add Patient
               </Button>
