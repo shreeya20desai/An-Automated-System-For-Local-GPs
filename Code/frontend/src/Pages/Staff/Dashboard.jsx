@@ -19,17 +19,17 @@ const StaffDashboard = () => {
 
   const navbarLinks = [
     {
-      id: "appointments",
+      id: "setAvailability",
       originalName: "Appointment_Bookings",
       displayName: "Set Availability",
-      href: "#Schedule",
+      href: "#Availability",
     },
 
     {
-      id: "appointments",
+      id: "setAvailability",
       originalName: "Appointment_Bookings",
-      displayName: "Appointment",
-      href: "#Schedule",
+      displayName: "Appointment Booked",
+      href: "#Availability",
     },
 
     {
@@ -50,7 +50,7 @@ const StaffDashboard = () => {
       id: "profile",
       originalName: "Profile",
       displayName: "Profile",
-      href: "#StaffInfo",
+      href: "#UserInfo",
     },
   ];
 
