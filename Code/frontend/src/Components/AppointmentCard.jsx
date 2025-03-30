@@ -1,7 +1,8 @@
 import React from "react";
 import { Card, Table, CardBody } from "react-bootstrap";
+import CancelAppointmentButtom from "../Components/CancelAppointmentButton";
 
-const AppointmentCard = ({ data }) => {
+const AppointmentCard = ({ data, onCancel }) => {
   return (
     <Card>
       <CardBody>
@@ -12,6 +13,7 @@ const AppointmentCard = ({ data }) => {
               {data.headers.map((header, index) => (
                 <th key={index}>{header}</th>
               ))}
+              {onCancel && <th>Actions</th>}
             </tr>
           </thead>
           {/* Table Body */}
@@ -21,6 +23,14 @@ const AppointmentCard = ({ data }) => {
                 {row.map((cell, cellIndex) => (
                   <td key={cellIndex}>{cell}</td>
                 ))}
+                {onCancel && (
+                  <td>
+                    <CancelAppointmentButtom
+                      onCancel={onCancel}
+                      rowId={row.id}
+                    />
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

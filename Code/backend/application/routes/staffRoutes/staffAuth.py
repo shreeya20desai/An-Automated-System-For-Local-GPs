@@ -16,6 +16,7 @@ JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
+# Staff Verification
 def verify_staff(email):
     try:
         dotIndex = email.index('.')
@@ -26,8 +27,6 @@ def verify_staff(email):
             return None 
     except ValueError:
         return 'No . or @ found'
-
-
 
 
 # -------------utility functions for Doctor and Nurse registration----------------
@@ -113,7 +112,7 @@ def createStaffLogin():
     else:
         return jsonify({'message': 'Database connection failed'}), 500
 
-
+# Endpoint for Patient Creation
 @staffauth_bp.route('/gp-patient/registration', methods=['POST'])
 def create_gp_patient():
     data = request.get_json()
@@ -229,7 +228,7 @@ def staff_login():
             }
             token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
-            response = make_response(jsonify({'message': 'Login successful'}), 200)
+            response = make_response(jsonify({'message': 'Login successful','staffType':staff_type}), 200)
             response.set_cookie('access_token', token, httponly=True, secure=True, samesite='Strict')
 
             return response

@@ -1,19 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import LoginForm from "../../Components/LoginForm.jsx";
-import LoginButton from "../../Components/LoginButton.jsx";
+import { BASE_URL } from "../../config";
 
 import "../Login/Login.css";
 
 function StaffLogin() {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
-  const handleLoginSubmit = () => {
-    navigate("/StaffDashboard");
+  const handleSubmit = async (email, password) => {
+    setError("");
+    //API call
+    try {
+      const response = await fetch(`${BASE_URL}/staff/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          staffEmail: email,
+          staffPassword: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Login successful
+        if (data.staffType === "doctor" || data.staffType === "nurse") {
+          navigate("/StaffDashboard");
+        } else if (data.staffType === "admin") {
+          navigate("/AdminDashboard");
+        } else {
+          setError("Unknown staff type.");
+        }
+      } else {
+        setError(
+          data.message || "Login failed. Please check your credentials."
+        );
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      setError("Network error. Please try again.");
+    }
   };
 
   return (
@@ -30,8 +64,8 @@ function StaffLogin() {
             >
               STAFF LOGIN
             </h1>
-            <LoginForm onLoginSuccess={handleLoginSubmit} />
-            <LoginButton onSubmit={handleLoginSubmit} />
+            <LoginForm onLoginSuccess={handleSubmit} />
+
             <div>
               <p
                 style={{

@@ -11,11 +11,11 @@ const SetDoctorAvailability = () => {
   const [selectedSlots, setSelectedSlots] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const timeSlots = []; //FInitialzied an Empty Array of TimeSlot
+  const timeSlots = []; //Initialzied an Empty Array of TimeSlot
   for (
     let hour = 9;
     hour < 17;
-    hour++ //starts to loop from 9 am to 4pm
+    hour++ //starts to loop from 9 am to 5pm
   ) {
     if (hour >= 13 && hour < 14) continue; //skips the hours considered as a lunch break
     for (

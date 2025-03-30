@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import AppointmentBookingForm from "./AppointmentBookingForm";
+import BookingAppointmentForm from "../Components/BookingAppointmentForm";
 
 const BookingAppointmentModal = ({ show, onHide, onBookingComplete }) => {
   const [showCalendar, setShowCalendar] = useState(false);
@@ -68,7 +68,8 @@ const BookingAppointmentModal = ({ show, onHide, onBookingComplete }) => {
       </Modal.Header>
       <Modal.Body>
         {!showCalendar && !showDoctors && (
-          <AppointmentBookingForm
+          //imported component BookingAppointmentForm
+          <BookingAppointmentForm
             onSubmit={handleFormSubmit}
             name={name}
             setName={setName}

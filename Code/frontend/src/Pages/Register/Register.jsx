@@ -1,12 +1,40 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, Row, Card, Col } from "react-bootstrap";
 import "../Login/Login.css";
-import Image from "../../Assets/Image1.png"; //Image from Google https://www.google.com/search?q=hospital+management+images+&sca_esv=12555c0b9fcc47a6&udm=2&biw=1536&bih=695&sxsrf=AHTn8zr0dM5q1a70OBxTFI6gQzBmKkYTUA%3A1740743358605&ei=vqLBZ6nTJJLPhbIPg6eC-AY&ved=0ahUKEwipqqOspuaLAxWSZ0EAHYOTAG8Q4dUDCBE&uact=5&oq=hospital+management+images+&gs_lp=EgNpbWciG2hvc3BpdGFsIG1hbmFnZW1lbnQgaW1hZ2VzIDIFEAAYgAQyBhAAGAgYHjIGEAAYCBgeMgYQABgIGB4yBhAAGAgYHjIGEAAYCBgeMgYQABgIGB5I_QRQugJYugJwAHgAkAEAmAFWoAGLAaoBATK4AQPIAQD4AQGYAgGgAmSYAwDiAwUSATEgQIgGAZIHAzAuMaAHhgU&sclient=img#imgrc=a6i6ZCYTdL-CYM&imgdii=mq2RMqRVs0kdgM
+import Image from "../../Assets/Image1.png";
 import RegisterForm from "../../Components/RegisterForm";
-import RegisterButton from "../../Components/RegisterButton";
 import { Link } from "react-router-dom";
+import { BASE_URL } from "../../config";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [registerError, setRegisterError] = useState(null);
+
+  const handleRegister = async (registrationData) => {
+    //API call
+    try {
+      console.log("Registration Data:", registrationData);
+      const response = await fetch(`${BASE_URL}/patient/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(registrationData),
+      });
+
+      if (response.ok) {
+        navigate("/");
+      } else {
+        const errorData = await response.json();
+        setRegisterError(errorData.message || "Registration failed");
+      }
+    } catch (error) {
+      setRegisterError("An error occurred during registration.");
+      console.error("Registration error:", error);
+    }
+  };
+
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100">
       <Card className="card">
@@ -25,8 +53,11 @@ const Register = () => {
             >
               REGISTER
             </h1>
-            <RegisterForm />
-            <RegisterButton />
+
+            <RegisterForm onRegister={handleRegister} />
+            {registerError && (
+              <p className="text-danger mt-2">{registerError}</p>
+            )}
             <div>
               <p style={{ marginTop: "2rem", fontWeight: "600" }}>
                 Already Have An Account? <Link to="/">Login</Link>

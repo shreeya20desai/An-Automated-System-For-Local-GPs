@@ -1,37 +1,36 @@
 import React, { useState } from "react";
-import { FaEnvelope, FaLock, FaUser, FaTransgender } from "react-icons/fa"; //https://react-icons.github.io/react-icons/search/#q=lock
-import { useNavigate, Link } from "react-router-dom";
+import {
+  FaEnvelope,
+  FaLock,
+  FaUser,
+  FaTransgender,
+  FaPhone,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-const RegisterForm = () => {
-  const [fullName, setFullName] = useState("");
+const RegisterForm = ({ onRegister }) => {
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setlastName] = useState("");
   const [gender, setGender] = useState("");
   const [dob, setDob] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (
-      !fullName ||
-      !gender ||
-      !dob ||
-      !email ||
-      !password ||
-      !confirmPassword
-    ) {
-      setError("Please fill in all the fields");
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError("Passwords don't match");
-      return;
-    }
-    setError("");
-    console.log("Successfully Registered");
-    navigate("/");
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onRegister({
+      firstName,
+      lastName,
+      dob,
+      gender,
+      email,
+      phone,
+      password,
+    });
   };
 
   return (
@@ -39,10 +38,22 @@ const RegisterForm = () => {
       <div className="mb-3 position-relative">
         <input
           type="text"
-          placeholder="Enter Full Name"
+          placeholder="Enter First Name"
           className="form-control"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          value={firstName}
+          onChange={(e) => setfirstName(e.target.value)}
+          required
+        />
+        <FaUser className="position-absolute top-50 end-0 translate-middle-y me-3" />
+      </div>
+
+      <div className="mb-3 position-relative">
+        <input
+          type="text"
+          placeholder="Enter Last Name"
+          className="form-control"
+          value={lastName}
+          onChange={(e) => setlastName(e.target.value)}
           required
         />
         <FaUser className="position-absolute top-50 end-0 translate-middle-y me-3" />
@@ -87,6 +98,18 @@ const RegisterForm = () => {
 
       <div className="mb-3 position-relative">
         <input
+          type="tel"
+          placeholder="Enter Phone Number"
+          className="form-control"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          required
+        />
+        <FaPhone className="position-absolute top-50 end-0 translate-middle-y me-3" />
+      </div>
+
+      <div className="mb-3 position-relative">
+        <input
           type="password"
           placeholder="Enter Password"
           className="form-control"
@@ -108,6 +131,14 @@ const RegisterForm = () => {
         />
         <FaLock className="position-absolute top-50 end-0 translate-middle-y me-3" />
       </div>
+
+      <button
+        className="btn btn-dark"
+        type="submit"
+        style={{ fontWeight: "bold", width: "100%" }}
+      >
+        REGISTER
+      </button>
     </form>
   );
 };

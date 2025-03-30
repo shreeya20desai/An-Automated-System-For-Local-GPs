@@ -1,24 +1,70 @@
 import React, { useState } from "react";
 import { Card, Form, Button, Row, Col } from "react-bootstrap";
-
-// Reference Links
-// https://react-bootstrap.netlify.app/docs/forms/overview/
-// https://react-bootstrap.netlify.app/docs/forms/form-control
-// https://react-bootstrap.netlify.app/docs/components/buttons/
+import { BASE_URL } from "../config";
 
 const AddPatientForm = () => {
-  console.log("Add patient form rendered");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-  const [password, setPassword] = useState("");
+  const [patientFirstName, setFirstName] = useState("");
+  const [patientLastName, setLastName] = useState("");
+  const [patientEmail, setEmail] = useState("");
+  const [patientPhone, setContactNumber] = useState("");
+  const [patientPassword, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ fullName, email, contactNumber, password, dob, gender });
+
+    if (patientPassword !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+    //API call
+    try {
+      const response = await fetch(
+        `${BASE_URL}/gp-patient/registration`,
+
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            Admin_Email: "Uol.admin@healme.com", //will be changed later
+            admin_Id: 10, //will be changed later
+            patientFirstName: patientFirstName,
+            patientLastName: patientLastName,
+            patientEmail: patientEmail,
+            patientPhone: patientPhone,
+            gender: gender,
+            dob: dob,
+            patientPassword: patientPassword,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Patient registered successfully:", data);
+        alert("Patient added successfully!");
+        // Reset form fields after successful submission
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setContactNumber("");
+        setPassword("");
+        setConfirmPassword("");
+        setDob("");
+        setGender("");
+      } else {
+        console.error("Error registering patient:", data.message);
+        alert(`Error registering patient: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      alert("Network error. Please try again.");
+    }
   };
 
   return (
@@ -28,86 +74,120 @@ const AddPatientForm = () => {
           <Card.Header style={{ textAlign: "center" }}>Add Patient</Card.Header>
           <Card.Body>
             <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Label>Full Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter full name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                />
-              </Form.Group>
+              {/* First and Last name */}
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>First Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter first name"
+                      value={patientFirstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Last Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter last name"
+                      value={patientLastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Email Address</Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder="Enter email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </Form.Group>
+              {/* Email address and Contact number */}
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Email Address</Form.Label>
+                    <Form.Control
+                      type="email"
+                      placeholder="Enter email"
+                      value={patientEmail}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Contact Number</Form.Label>
+                    <Form.Control
+                      type="tel"
+                      placeholder="Enter contact number"
+                      value={patientPhone}
+                      onChange={(e) => setContactNumber(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Contact Number</Form.Label>
-                <Form.Control
-                  type="tel"
-                  placeholder="Enter contact number"
-                  value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
-                  required
-                />
-              </Form.Group>
+              {/* DOB and Gender */}
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Date of Birth</Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={dob}
+                      onChange={(e) => setDob(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Gender</Form.Label>
+                    <Form.Select
+                      value={gender}
+                      onChange={(e) => setGender(e.target.value)}
+                      required
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </Form.Group>
+              {/* Password */}
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      placeholder="Password"
+                      value={patientPassword}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      placeholder="Confirm Password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Confirm Password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Date of Birth</Form.Label>
-                <Form.Control
-                  type="date"
-                  value={dob}
-                  onChange={(e) => setDob(e.target.value)}
-                  required
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Gender</Form.Label>
-                <Form.Select
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  required
-                >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                </Form.Select>
-              </Form.Group>
-
-              {/* Can change the button color to secondary, success, warning, danger,info, dark, light */}
               <Button variant="primary" type="submit">
                 Add Patient
               </Button>

@@ -4,17 +4,10 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 function LoginForm({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setError("Please fill in the fields");
-    } else {
-      console.log("Successfully Logged In");
-      setError("");
-      onLoginSuccess();
-    }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onLoginSuccess(email, password);
   };
 
   return (
@@ -42,6 +35,14 @@ function LoginForm({ onLoginSuccess }) {
         />
         <FaLock className="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" />
       </div>
+
+      <button
+        className="btn btn-dark w-100"
+        type="submit"
+        style={{ fontWeight: "bold" }}
+      >
+        LOGIN
+      </button>
     </form>
   );
 }

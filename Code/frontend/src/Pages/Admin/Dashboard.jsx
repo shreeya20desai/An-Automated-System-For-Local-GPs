@@ -61,6 +61,12 @@ const AdminDashboard = () => {
       displayName: "Manage Bookings",
       href: "#Schedule",
     },
+    {
+      id: "setAvailability",
+      originalName: "Appointment_Bookings",
+      displayName: "Set Availability",
+      href: "#Schedule",
+    },
   ];
 
   return (

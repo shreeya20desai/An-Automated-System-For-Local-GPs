@@ -15,14 +15,12 @@ JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-
-
-
+# Register patient Endpoint
 @auth_bp.route('/patient/register', methods=['POST'])
 def register_patient():
     data = request.get_json()
-    p_first_name = data.get('p_first_name')
-    p_last_name = data.get('p_last_name')
+    p_first_name = data.get('firstName')
+    p_last_name = data.get('lastName')
     dob = data.get('dob')
     gender = data.get('gender')
     email = data.get('email')
@@ -64,8 +62,7 @@ def register_patient():
 
 
 
-
-
+# Login patient Endpoint
 @auth_bp.route('/patient/login', methods=['POST'])
 def patient_login():
     data = request.get_json()

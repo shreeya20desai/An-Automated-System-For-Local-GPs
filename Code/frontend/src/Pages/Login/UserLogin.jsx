@@ -1,21 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import LoginForm from "../../Components/LoginForm.jsx";
-import LoginButton from "../../Components/LoginButton.jsx";
 import RegisterButtonHere from "../../Components/RegisterHereButton.jsx";
 import StaffLoginButton from "../../Components/StaffLoginButton.jsx";
 import Image from "../../../src/Assets/Image1.png";
 import "./Login.css";
+import { BASE_URL } from "../../config.js";
 
 function UserLogin() {
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState(null);
+  const handleSubmit = async (email, password) => {
+    //API call
+    try {
+      const response = await fetch(`${BASE_URL}/patient/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-  const handleSubmit = () => {
-    navigate("/dashboard");
+      if (response.ok) {
+        navigate("/dashboard");
+      } else {
+        const errorData = await response.json();
+        setLoginError(errorData.message || "Login failed");
+      }
+    } catch (error) {
+      setLoginError("An error occurred during login.");
+      console.error("Login error:", error);
+    }
   };
 
   return (
@@ -39,11 +58,6 @@ function UserLogin() {
 
             {/* Imported The LoginFrom From Components */}
             <LoginForm onLoginSuccess={handleSubmit} />
-
-            {/* Imported The LoginButton From Components */}
-            <div className="d-flex justify-content-center">
-              <LoginButton onSubmit={handleSubmit} />
-            </div>
 
             {/* Imported The StaffLoginButton From Components */}
             <div className="d-flex justify-content-center mt-3">
