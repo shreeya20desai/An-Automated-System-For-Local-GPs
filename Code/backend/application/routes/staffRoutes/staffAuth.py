@@ -112,6 +112,8 @@ def createStaffLogin():
     else:
         return jsonify({'message': 'Database connection failed'}), 500
 
+
+
 # Endpoint for Patient Creation
 @staffauth_bp.route('/gp-patient/registration', methods=['POST'])
 def create_gp_patient():

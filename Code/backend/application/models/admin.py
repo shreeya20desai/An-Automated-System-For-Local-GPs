@@ -25,7 +25,7 @@ def insert_admin():
                 # Insert the admin details into the database
                 cursor.execute("""
                     INSERT INTO Admin (Admin_Password, Admin_Email)
-                    VALUES (?, ?)
+                    VALUES (?, ?)3
                 """, ( admin_password, admin_email))
                 conn.commit()
                 print("Admin Created successfully.")
