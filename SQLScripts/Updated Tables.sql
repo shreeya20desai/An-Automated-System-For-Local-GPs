@@ -42,7 +42,7 @@ CREATE TABLE Nurse (
     Nurse_Email VARCHAR(255) UNIQUE,
     Nurse_Phone_No VARCHAR(15) UNIQUE,
     Nurse_Registration_Number VARCHAR(15) UNIQUE,
-    Specialization VARCHAR(255),  -- e.g., "Diabetes Care", "Wound Care"
+    Specialization VARCHAR(255), 
     N_Password VARCHAR(255)	NOT NULL,
 	Registered_By_Admin INT FOREIGN KEY REFERENCES Admin(Admin_id)
 );
