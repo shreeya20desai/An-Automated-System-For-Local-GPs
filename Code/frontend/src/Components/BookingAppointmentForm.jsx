@@ -10,27 +10,13 @@ import "react-calendar/dist/Calendar.css";
 const BookingAppintmentForm = ({
   onSubmit,
   name,
-  setName,
   email,
-  setEmail,
   contactNumber,
   setContactNumber,
-  diseaseBrief,
-  setDiseaseBrief,
-  setSelectedTime,
   selectedProblem,
   setSelectedProblem,
+  problemOptions,
 }) => {
-  const problemOptions = [
-    "Fever",
-    "Cough",
-    "Cold",
-    "Abdominal Pain",
-    "Headache",
-    "Skin Rash",
-    "Other",
-  ];
-
   return (
     <Form onSubmit={onSubmit}>
       <Form.Group className="mb-3">
@@ -39,7 +25,7 @@ const BookingAppintmentForm = ({
           type="text"
           placeholder="Enter your name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          readOnly
           required
         />
       </Form.Group>
@@ -50,11 +36,12 @@ const BookingAppintmentForm = ({
           type="email"
           placeholder="Enter your email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          readOnly
           required
         />
       </Form.Group>
 
+      {/* might change in future */}
       <Form.Group className="mb-3">
         <Form.Label>Contact Number</Form.Label>
         <Form.Control
@@ -80,27 +67,6 @@ const BookingAppintmentForm = ({
             </option>
           ))}
         </Form.Select>
-      </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Label>Brief of Problem (Max 100 words)</Form.Label>
-        <Form.Control
-          as="textarea"
-          rows={3}
-          placeholder="Enter a brief description of Problem Faced."
-          value={diseaseBrief}
-          onChange={(e) => setDiseaseBrief(e.target.value)}
-          maxLength={100}
-          required
-        />
-      </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Label>Select Time</Form.Label>
-        <Form.Control
-          type="time"
-          onChange={(e) => setSelectedTime(e.target.value)}
-        />
       </Form.Group>
 
       <Button variant="primary" type="submit">

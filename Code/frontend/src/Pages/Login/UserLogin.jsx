@@ -58,6 +58,9 @@ function UserLogin() {
 
             {/* Imported The LoginFrom From Components */}
             <LoginForm onLoginSuccess={handleSubmit} />
+            {loginError && (
+              <p className="text-danger text-center mt-2">{loginError}</p>
+            )}
 
             {/* Imported The StaffLoginButton From Components */}
             <div className="d-flex justify-content-center mt-3">
