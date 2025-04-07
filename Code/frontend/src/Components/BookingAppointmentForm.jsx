@@ -62,8 +62,8 @@ const BookingAppintmentForm = ({
         >
           <option value="">Select a problem</option>
           {problemOptions.map((problem) => (
-            <option key={problem} value={problem}>
-              {problem}
+            <option key={problem.disease_id} value={problem.disease_id}>
+              {problem.disease_name}
             </option>
           ))}
         </Form.Select>
