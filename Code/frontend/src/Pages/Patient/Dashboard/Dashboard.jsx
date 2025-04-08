@@ -5,6 +5,7 @@ import LeftNavbar from "../../../Components/LeftNavBar";
 import AppointmentCard from "../../../Components/AppointmentCard";
 import BookAppointmentButton from "../../../Components/BookAppointmentButton";
 import BookingAppointmentModal from "../../../Components/BookingAppointmentModal";
+import Profile from "../../../Components/Profile";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -19,6 +20,7 @@ const Dashboard = () => {
 
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [showAppointmentContent, setShowAppointmentContent] = useState(true);
+  const [showProfile, setProfile] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -53,6 +55,7 @@ const Dashboard = () => {
       onClick: () => {
         setShowAppointmentContent(true);
         setShowBookingForm(false);
+        setProfile(false);
       },
     },
     {
@@ -71,7 +74,11 @@ const Dashboard = () => {
       id: "profile",
       originalName: "Profile",
       displayName: "Profile",
-      href: "#UserInfo",
+      onClick: () => {
+        setShowAppointmentContent(false);
+        setShowBookingForm(false);
+        setProfile(true);
+      },
     },
   ];
 
@@ -123,6 +130,8 @@ const Dashboard = () => {
                 )}
               </>
             )}
+
+            {showProfile && <Profile />}
           </Col>
         </Row>
       </Container>

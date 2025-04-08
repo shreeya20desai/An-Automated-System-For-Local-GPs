@@ -3,10 +3,13 @@ import { Container, Row, Col } from "react-bootstrap";
 import TopNavbar from "../../Components/TopNavBar";
 import LeftNavbar from "../../Components/LeftNavBar";
 import SetDoctorAvailability from "../../Components/SetDoctorAvailability";
+import StaffProfile from "../../Components/StaffProfile";
 
 const StaffDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showSetAvailability, setShowSetAvailability] = useState(true);
+  const [showProfile, setShowProfile] = useState(false);
+  const [staffType, setStaffType] = useState("Doctor");
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -21,7 +24,10 @@ const StaffDashboard = () => {
       id: "setAvailability",
       originalName: "Appointment_Bookings",
       displayName: "Set Availability",
-      onClick: () => setShowSetAvailability(true),
+      onClick: () => {
+        setShowSetAvailability(true);
+        setShowProfile(false);
+      },
     },
     {
       id: "prescriptions",
@@ -39,7 +45,10 @@ const StaffDashboard = () => {
       id: "profile",
       originalName: "Profile",
       displayName: "Profile",
-      href: "#UserInfo",
+      onClick: () => {
+        setShowSetAvailability(false);
+        setShowProfile(true);
+      },
     },
   ];
 
@@ -56,20 +65,10 @@ const StaffDashboard = () => {
       <Container fluid style={{ paddingTop: "76px" }}>
         <Row>
           <Col xs={12} md={{ span: 9, offset: 3 }} lg={{ span: 10, offset: 2 }}>
-            {/* Removed the "Appointment" heading and "Book Appointment" button */}
+            {showSetAvailability && <SetDoctorAvailability />}
+            {showProfile && <StaffProfile staffType={staffType} />}
           </Col>
         </Row>
-        {showSetAvailability && (
-          <Row>
-            <Col
-              xs={12}
-              md={{ span: 9, offset: 3 }}
-              lg={{ span: 10, offset: 2 }}
-            >
-              <SetDoctorAvailability />
-            </Col>
-          </Row>
-        )}
       </Container>
     </div>
   );
