@@ -3,6 +3,7 @@ import { Card, Form, Button, Row, Col, Table } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; //npm install react-datepicker@latest
 import SetDoctorAvailabilityModal from "../Components/SetDoctorAvailabilityModal";
+import { format } from "date-fns";
 
 const SetDoctorAvailability = () => {
   const [dates, setDates] = useState([new Date()]);
@@ -10,6 +11,7 @@ const SetDoctorAvailability = () => {
   const [error, setError] = useState("");
   const [selectedSlots, setSelectedSlots] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [selectAll, setSelectAll] = useState(false);
 
   const timeSlots = []; //Initialzied an Empty Array of TimeSlot
   for (
@@ -89,6 +91,11 @@ const SetDoctorAvailability = () => {
 
   //Add availability
   const handleAddAvailability = () => {
+    if (selectedSlots.length === 0) {
+      setError("Please select at least one time slot to add availability.");
+      return;
+    }
+
     const datesArray = Array.isArray(dates) ? dates : [dates]; //checks whether date is an array if not it wraps into an array.
     //Filters through the dates.array and keep only the date taht are not qithin booking range
     const invalidDates = datesArray.filter(
@@ -112,14 +119,17 @@ const SetDoctorAvailability = () => {
     datesArray.forEach((date) => {
       newAvailability = newAvailability.concat(
         slotsToAdd.map((slot) => ({
-          date: date.toISOString().split("T")[0],
+          date: format(date, "yyyy-MM-dd"),
           day: getDayName(date),
           timeSlot: slot,
         }))
       );
     });
 
-    setAvailability([...availability, ...newAvailability]);
+    setAvailability((prevAvailability) => [
+      ...prevAvailability,
+      ...newAvailability,
+    ]);
     setSelectedSlots([]);
     setShowConfirmation(false);
   };
@@ -140,6 +150,19 @@ const SetDoctorAvailability = () => {
 
   const handleDateChange = (dateOrDates) => {
     setDates(Array.isArray(dateOrDates) ? dateOrDates : [dateOrDates]);
+    if (selectAll) {
+      setSelectedSlots([]);
+    }
+  };
+
+  const handleSelectAllChange = (e) => {
+    const checked = e.target.checked;
+    setSelectAll(checked);
+    if (checked) {
+      setSelectedSlots([...timeSlots]);
+    } else {
+      setSelectedSlots([]);
+    }
   };
 
   return (
@@ -149,7 +172,7 @@ const SetDoctorAvailability = () => {
           <Card.Header style={{ textAlign: "center" }}>
             Set Doctor Availability
           </Card.Header>
-          <Card.Body>
+          <Card.Body style={{ maxHeight: "600px", overflowY: "auto" }}>
             <Form>
               <Row>
                 <Col md={12} className="mb-3">
@@ -170,6 +193,12 @@ const SetDoctorAvailability = () => {
                   <Form.Label style={{ fontWeight: "bold" }}>
                     Time Slots
                   </Form.Label>
+                  <Form.Check
+                    type="checkbox"
+                    label="Select All"
+                    checked={selectAll}
+                    onChange={handleSelectAllChange}
+                  />
                   <div className="d-flex flex-wrap">
                     {timeSlots.map((slot) => (
                       <Button
@@ -202,10 +231,10 @@ const SetDoctorAvailability = () => {
             <Table striped bordered hover responsive>
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>Day</th>
-                  <th>Time Slot</th>
-                  <th>Actions</th>
+                  <th style={{ width: "15%" }}>Date</th>
+                  <th style={{ width: "10%" }}>Day</th>
+                  <th style={{ width: "45%" }}>Time Slot</th>
+                  <th style={{ width: "30%" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
