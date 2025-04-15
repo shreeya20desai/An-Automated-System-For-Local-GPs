@@ -35,6 +35,37 @@ CREATE TABLE Doctor (
 	Registered_By_Admin INT FOREIGN KEY REFERENCES Admin(Admin_id)
 );
 
+-- updating doctor table to add specialisation table for better scalabilty
+ALTER TABLE Doctor
+ADD Specialization_ID INT;
+
+ALTER TABLE Doctor
+DROP COLUMN Specialization;
+
+ALTER TABLE Doctor
+ADD CONSTRAINT FK_Doctor_Specialization
+FOREIGN KEY (Specialization_ID) REFERENCES Specialization(Specialization_ID);
+
+INSERT INTO Specialization (Specialization_Name)
+VALUES 
+('Cardiology'),
+('Neurology'),
+('Orthopedics'),
+('Pediatrics'),
+('Dermatology'),
+('Gastroenterology'),
+('Oncology'),
+('Endocrinology'),
+('Urology'),
+('Ophthalmology');
+
+INSERT INTO Specialization (Specialization_Name)
+VALUES ('General');
+
+
+Select * from Specialization
+
+
 CREATE TABLE Nurse (
     Nurse_id INT PRIMARY KEY IDENTITY(1,1),
     Nurse_FirstName VARCHAR(255),
@@ -48,8 +79,80 @@ CREATE TABLE Nurse (
 );
 
 
+-- Adding Specialization_ID to the Nurse table
+ALTER TABLE Nurse
+ADD Specialization_ID INT;
+
+ALTER TABLE Nurse
+DROP COLUMN Specialization;
+
+
+-- Adding a foreign key constraint to the Nurse table to link to Nurse_Specialization
+ALTER TABLE Nurse
+ADD CONSTRAINT FK_Nurse_Specialization
+FOREIGN KEY (Specialization_ID) REFERENCES Nurse_Specialization(Specialization_ID);
+
+
+
+
+CREATE TABLE Nurse_Specialization (
+    Specialization_ID INT PRIMARY KEY IDENTITY(1,1),
+    Specialization_Name VARCHAR(255) NOT NULL
+);
+
+-- Insert essential nurse specializations
+INSERT INTO Nurse_Specialization (Specialization_Name)
+VALUES 
+('Critical Care Nurse'),
+('Emergency Room Nurse'),
+('Cardiac Nurse'),
+('Neonatal Nurse'),
+('Pediatric Nurse'),
+('Oncology Nurse'),
+('Orthopedic Nurse'),
+('Geriatric Nurse'),
+('Surgical Nurse'),
+('Dialysis Nurse');
+
+
+select* from Nurse
+
+CREATE TABLE Disease (
+    Disease_id INT PRIMARY KEY IDENTITY(1,1),
+    Disease_Name VARCHAR(255) NOT NULL,
+    Specialization_id INT NOT NULL,
+    FOREIGN KEY (Specialization_id) REFERENCES Specialization(Specialization_id)
+);
+
+Select * from Disease
+INSERT INTO Disease (Disease_Name, Specialization_id)
+VALUES 
+('Fever', 11),  -- General
+('Cough', 11),  -- General
+('Abdominal Pain', 6),  -- Gastroenterology
+('Headache', 2),  -- Neurology
+('Cold', 11),  -- General
+('Asthma', 11),  -- General
+('Diabetes', 8),  -- Endocrinology
+('Hypertension', 1),  -- Cardiology
+('Gastritis', 6),  -- Gastroenterology
+('Chickenpox', 5);  -- Dermatology
+
+
+CREATE TABLE Specialization (
+    Specialization_id INT PRIMARY KEY IDENTITY(1,1),
+    Specialization_Name VARCHAR(255) UNIQUE NOT NULL
+);
 
 DELETE FROM Admin where Admin_Email= 'Uol.admin@healme.com'
 Select * from Admin
 
 USE GP;
+
+Select * from doctor
+
+select * from Patient
+
+select * from DoctorAvailability
+
+Select * from Appointment
