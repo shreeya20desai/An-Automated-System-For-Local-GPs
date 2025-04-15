@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import TopNavbar from "../../Components/TopNavBar";
 import LeftNavbar from "../../Components/LeftNavBar";
@@ -9,7 +9,58 @@ const StaffDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showSetAvailability, setShowSetAvailability] = useState(true);
   const [showProfile, setShowProfile] = useState(false);
-  const [staffType, setStaffType] = useState("Doctor");
+  const [staffType, setStaffType] = useState("");
+  const [sidebarLinks, setSidebarLinks] = useState([]);
+
+  useEffect(() => {
+    const storedStaffType = localStorage.getItem("staffType");
+    if (storedStaffType) {
+      setStaffType(storedStaffType);
+    }
+
+    const initialLinks = [
+      {
+        id: "setAvailability",
+        originalName: "Appointment_Bookings",
+        displayName: "Set Availability",
+        onClick: () => {
+          setShowSetAvailability(true);
+          setShowProfile(false);
+        },
+      },
+      {
+        id: "prescriptions",
+        originalName: "Prescriptions",
+        displayName: "Prescriptions",
+        href: "#Medications",
+      },
+      {
+        id: "records",
+        originalName: "Medical Records",
+        displayName: "Medical Records",
+        href: "#PatientData",
+      },
+      {
+        id: "profile",
+        originalName: "Profile",
+        displayName: "Profile",
+        onClick: () => {
+          setShowSetAvailability(false);
+          setShowProfile(true);
+        },
+      },
+    ];
+
+    if (storedStaffType === "nurse") {
+      // Nurse: Disabled the prescriptions.
+      const updatedLinks = initialLinks.map((link) =>
+        link.id === "prescriptions" ? { ...link, disabled: true } : link
+      );
+      setSidebarLinks(updatedLinks);
+    } else {
+      setSidebarLinks(initialLinks);
+    }
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -19,39 +70,6 @@ const StaffDashboard = () => {
     setIsSidebarOpen(false);
   };
 
-  const navbarLinks = [
-    {
-      id: "setAvailability",
-      originalName: "Appointment_Bookings",
-      displayName: "Set Availability",
-      onClick: () => {
-        setShowSetAvailability(true);
-        setShowProfile(false);
-      },
-    },
-    {
-      id: "prescriptions",
-      originalName: "Prescriptions",
-      displayName: "Prescriptions",
-      href: "#Medications",
-    },
-    {
-      id: "records",
-      originalName: "Medical Records",
-      displayName: "Medical Records",
-      href: "#PatientData",
-    },
-    {
-      id: "profile",
-      originalName: "Profile",
-      displayName: "Profile",
-      onClick: () => {
-        setShowSetAvailability(false);
-        setShowProfile(true);
-      },
-    },
-  ];
-
   return (
     <div
       style={{ backgroundColor: "#F5F5F5", minHeight: "100vh", width: "100vw" }}
@@ -60,7 +78,7 @@ const StaffDashboard = () => {
       <LeftNavbar
         isOpen={isSidebarOpen}
         onClose={closeSidebar}
-        links={navbarLinks}
+        links={sidebarLinks}
       />
       <Container fluid style={{ paddingTop: "76px" }}>
         <Row>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Row, Col } from "react-bootstrap";
 import { BASE_URL } from "../config";
 
@@ -11,40 +11,67 @@ const AddStaffForm = () => {
   const [staffPassword, setPassword] = useState("");
   const [staffRegistrationNumber, setStaffRegistrationNumber] = useState("");
   const [staffType, setStaffType] = useState("");
+  const [specializations, setSpecializations] = useState([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    //API call
+  const fetchSpecializations = async (staffType) => {
+    //API Call to get the specializations for the staff based on their type i.e Nurse/Doctor.
     try {
       const response = await fetch(
-        `${BASE_URL}/staff/registration`,
-
+        `${BASE_URL}/get_specializations?staff_type=${staffType}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            Admin_Email: "Uol.admin@healme.com", //will be changed later
-            admin_Id: 10, //will be changed later
-            staffType: staffType,
-            staffFirstName: staffFirstName,
-            staffLastName: staffLastName,
-            staffEmail: staffEmail,
-            staffPhone: staffPhone,
-            staffRegistrationNumber: staffRegistrationNumber,
-            staffSpecialization: staffSpecialization,
-            staffPassword: staffPassword,
-          }),
+          credentials: "include",
         }
       );
+      const data = await response.json();
+
+      if (response.ok) {
+        setSpecializations(data);
+      } else {
+        console.error("Error fetching specializations:", data.error);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (staffType) {
+      fetchSpecializations(staffType);
+    }
+  }, [staffType]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    //API call for admin to register staff
+    try {
+      const response = await fetch(`${BASE_URL}/staff/registration`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          staffType,
+          staffFirstName,
+          staffLastName,
+          staffEmail,
+          staffPhone,
+          staffRegistrationNumber,
+          staffSpecialization,
+          staffPassword,
+        }),
+      });
 
       const data = await response.json();
 
       if (response.ok) {
         console.log("Staff added successfully:", data);
         alert("Staff added successfully!");
-        // Reset form fields after successful submission
+        // Reset form
         setFirstName("");
         setLastName("");
         setEmail("");
@@ -132,19 +159,6 @@ const AddStaffForm = () => {
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Specialization</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter specialization"
-                      value={staffSpecialization}
-                      onChange={(e) => setSpecialization(e.target.value)}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-
-                <Col md={6}>
-                  <Form.Group className="mb-3">
                     <Form.Label>Staff Type</Form.Label>
                     <Form.Control
                       as="select"
@@ -153,8 +167,30 @@ const AddStaffForm = () => {
                       required
                     >
                       <option value="">Select Staff Type</option>
-                      <option value="doctor">Doctor</option>
-                      <option value="nurse">Nurse</option>
+                      <option value="Doctor">Doctor</option>
+                      <option value="Nurse">Nurse</option>
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Specialization</Form.Label>
+                    <Form.Control
+                      as="select"
+                      value={staffSpecialization}
+                      onChange={(e) => setSpecialization(e.target.value)}
+                      required
+                    >
+                      <option value="">Select Specialization</option>
+                      {specializations.map((spec) => (
+                        <option
+                          key={spec.Specialization_ID}
+                          value={spec.Specialization_ID}
+                        >
+                          {spec.Specialization_Name}
+                        </option>
+                      ))}
                     </Form.Control>
                   </Form.Group>
                 </Col>

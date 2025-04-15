@@ -6,22 +6,24 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import LoginForm from "../../Components/LoginForm.jsx";
 import { BASE_URL } from "../../config";
-
 import "../Login/Login.css";
 
 function StaffLogin() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const handleSubmit = async (email, password) => {
+  const handleLogin = async (email, password) => {
     setError("");
-    //API call
+    setSuccessMessage("");
+    //API call for staff login
     try {
       const response = await fetch(`${BASE_URL}/staff/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           staffEmail: email,
           staffPassword: password,
@@ -31,21 +33,36 @@ function StaffLogin() {
       const data = await response.json();
 
       if (response.ok) {
-        // Login successful
-        if (data.staffType === "doctor" || data.staffType === "nurse") {
-          navigate("/StaffDashboard");
+        localStorage.setItem("staffType", data.staffType);
+        //localStorage.setItem("staffId", data.staffId);
+        if (data.staffType === "doctor") {
+          localStorage.setItem("doctor_id", data.staffId);
+          setTimeout(() => {
+            navigate("/StaffDashboard");
+          }, 0);
+        } else if (data.staffType === "nurse") {
+          localStorage.setItem("nurse_id", data.staffId);
+          setTimeout(() => {
+            navigate("/StaffDashboard");
+          }, 0);
         } else if (data.staffType === "admin") {
-          navigate("/AdminDashboard");
+          localStorage.setItem("admin_id", data.staffId);
+          setTimeout(() => {
+            navigate("/AdminDashboard");
+          }, 0);
         } else {
           setError("Unknown staff type.");
         }
+      } else if (response.status === 401) {
+        console.log("Error 401 occurred:", data);
+        setError(data.message || "Invalid email or password");
+      } else if (response.status === 400) {
+        setError(data.message || "Bad request. Please check your input.");
       } else {
-        setError(
-          data.message || "Login failed. Please check your credentials."
-        );
+        setError("Login failed. Please try again.");
       }
-    } catch (error) {
-      console.error("Network error:", error);
+    } catch (err) {
+      console.error("Network error:", err);
       setError("Network error. Please try again.");
     }
   };
@@ -64,7 +81,22 @@ function StaffLogin() {
             >
               STAFF LOGIN
             </h1>
-            <LoginForm onLoginSuccess={handleSubmit} />
+            <LoginForm onLoginSuccess={handleLogin} />
+
+            {error && (
+              <div className="alert alert-danger text-center mt-3" role="alert">
+                {error}
+              </div>
+            )}
+
+            {successMessage && (
+              <div
+                className="alert alert-success text-center mt-3"
+                role="alert"
+              >
+                {successMessage}
+              </div>
+            )}
 
             <div>
               <p

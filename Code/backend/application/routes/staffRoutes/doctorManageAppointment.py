@@ -11,7 +11,7 @@ doctorManageAppointments_bp = Blueprint('doctorManageAppointments', __name__)
 JWT_SECRET = os.getenv('JWT_SECRET', 'GP_UK')
 JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
 
-#Endpoint for Getting Patient Booking for particular date
+#API Endpoint for Getting Patient Booking for particular date
 @doctorManageAppointments_bp.route('/get_patient_bookings/<string:date>', methods=['GET'])
 def get_doctor_appointments_by_date(date):
     try:
@@ -45,8 +45,6 @@ def get_doctor_appointments_by_date(date):
 
 
 
-
-
 #yet to be tested
 def send_cancellation_email(patient_email, doctor_name, appointment_date, slot_time):
     """
@@ -71,7 +69,9 @@ def send_cancellation_email(patient_email, doctor_name, appointment_date, slot_t
     #     print(f"Error sending email: {e}")
     pass
 
-#Endpoint for Cancel Doctor Appointment
+
+
+#API Endpoint for Doctor to cancel patient Appointment
 @doctorManageAppointments_bp.route('/cancel_doctor_appointment/<int:appointment_id>', methods=['DELETE'])
 def cancel_doctor_appointment(appointment_id):
     try:

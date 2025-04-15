@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, Form, Button, Row, Col } from "react-bootstrap";
 import { BASE_URL } from "../config";
 
-const AddPatientForm = () => {
+const AddPatientForm = ({ adminEmail, adminId }) => {
   const [patientFirstName, setFirstName] = useState("");
   const [patientLastName, setLastName] = useState("");
   const [patientEmail, setEmail] = useState("");
@@ -19,36 +19,30 @@ const AddPatientForm = () => {
       alert("Passwords do not match.");
       return;
     }
-    //API call
-    try {
-      const response = await fetch(
-        `${BASE_URL}/gp-patient/registration`,
 
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            Admin_Email: "Uol.admin@healme.com", //will be changed later
-            admin_Id: 10, //will be changed later
-            patientFirstName: patientFirstName,
-            patientLastName: patientLastName,
-            patientEmail: patientEmail,
-            patientPhone: patientPhone,
-            gender: gender,
-            dob: dob,
-            patientPassword: patientPassword,
-          }),
-        }
-      );
+    // API call for admin registering New patients from admin dashboard
+    try {
+      const response = await fetch(`${BASE_URL}/gp-patient/registration`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          patientFirstName,
+          patientLastName,
+          patientEmail,
+          patientPhone,
+          gender,
+          dob,
+          patientPassword,
+        }),
+      });
 
       const data = await response.json();
-
       if (response.ok) {
-        console.log("Patient registered successfully:", data);
         alert("Patient added successfully!");
-        // Reset form fields after successful submission
+        // Reset form
         setFirstName("");
         setLastName("");
         setEmail("");
@@ -58,11 +52,18 @@ const AddPatientForm = () => {
         setDob("");
         setGender("");
       } else {
-        console.error("Error registering patient:", data.message);
-        alert(`Error registering patient: ${data.message}`);
+        console.error(
+          "Error registering patient:",
+          data.message || "Unknown error occurred."
+        );
+        alert(
+          `Error registering patient: ${
+            data.message || "Unknown error occurred."
+          }`
+        );
       }
-    } catch (error) {
-      console.error("Network error:", error);
+    } catch (networkErr) {
+      console.error("Network error:", networkErr);
       alert("Network error. Please try again.");
     }
   };

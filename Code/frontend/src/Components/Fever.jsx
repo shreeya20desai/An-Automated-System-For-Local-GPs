@@ -62,8 +62,9 @@ const FeverPage = () => {
             If incase any major issues. Kindly see a GP.
           </Card.Subtitle>
 
-          {/* Have to edit */}
-          <Button as={Link} to="/" variant="secondary"></Button>
+          <Button as={Link} to="/dashboard" variant="danger">
+            Book Appointment
+          </Button>
         </Card.Body>
       </Card>
     </Container>

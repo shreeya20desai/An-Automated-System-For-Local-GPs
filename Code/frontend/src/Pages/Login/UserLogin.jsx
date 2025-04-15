@@ -9,62 +9,76 @@ import RegisterButtonHere from "../../Components/RegisterHereButton.jsx";
 import StaffLoginButton from "../../Components/StaffLoginButton.jsx";
 import Image from "../../../src/Assets/Image1.png";
 import "./Login.css";
+import axios from "axios";
 import { BASE_URL } from "../../config.js";
 
 function UserLogin() {
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState(null);
-  const handleSubmit = async (email, password) => {
-    //API call
-    try {
-      const response = await fetch(`${BASE_URL}/patient/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+  const [loading, setLoading] = useState(false);
 
-      if (response.ok) {
+  const handleSubmit = async (email, password) => {
+    setLoading(true);
+    setLoginError(null);
+
+    //API call for patient login
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/patient/login`,
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        localStorage.setItem("patient_id", response.data.patient_id);
         navigate("/dashboard");
       } else {
-        const errorData = await response.json();
-        setLoginError(errorData.message || "Login failed");
+        setLoginError(response.data?.message || "Login failed");
       }
     } catch (error) {
-      setLoginError("An error occurred during login.");
-      console.error("Login error:", error);
+      if (error.response && error.response.status === 401) {
+        setLoginError("Invalid email or password.");
+      } else if (error.response && error.response.data?.message) {
+        setLoginError(error.response.data.message);
+      } else {
+        setLoginError("An error occurred during login. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100">
-      <Card className="card">
+      <Card className="login-card">
         <Row>
           <Col md={6} className="image-container d-none d-md-flex">
-            <img src={Image} alt="Login" className="image" />
+            <img src={Image} alt="Login Visual" className="image" />
           </Col>
+
           <Col
             xs={12}
             md={6}
             className="p-4 d-flex flex-column justify-content-center"
           >
-            <h1
-              className="text-center"
-              style={{ fontFamily: "Poppins", fontWeight: "revert-layer" }}
-            >
+            <h1 className="text-center" style={{ fontFamily: "Poppins" }}>
               LOGIN
             </h1>
 
             {/* Imported The LoginFrom From Components */}
-            <LoginForm onLoginSuccess={handleSubmit} />
+            <LoginForm onLoginSuccess={handleSubmit} loading={loading} />
             {loginError && (
               <p className="text-danger text-center mt-2">{loginError}</p>
             )}
 
             {/* Imported The StaffLoginButton From Components */}
             <div className="d-flex justify-content-center mt-3">
-              <StaffLoginButton onSubmit={handleSubmit} />
+              <StaffLoginButton />
             </div>
 
             <div className="d-flex flex-column align-items-center mt-4">

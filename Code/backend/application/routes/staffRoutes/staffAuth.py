@@ -5,6 +5,8 @@ import hashlib
 import os
 import datetime
 import jwt
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, set_access_cookies, set_refresh_cookies, unset_jwt_cookies
+
 
 staffauth_bp = Blueprint('staffAuth', __name__)
 
@@ -12,7 +14,8 @@ JWT_SECRET = os.getenv('JWT_SECRET', 'GP_UK')
 JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
 
 
-# Utility Functions provide general support for API building 
+# Utility Functioncode .
+
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
@@ -36,6 +39,9 @@ def register_doctor(conn, data, admin_id):
     if not data['staffEmail'] or not data['staffPhone']:
         return jsonify({'message': 'Invalid email or phone number'}), 400
 
+    if verify_staff(data['staffEmail']) != 'doctor':
+        return jsonify({'message': 'Email should have .doctor'}), 403
+    
     cursor.execute("""SELECT 1 FROM Doctor WHERE Doctor_Email = ? OR Doctor_Phone_No = ?""", (data['staffEmail'], data['staffPhone']))
     if cursor.fetchone():
         return jsonify({'message': 'Doctor Already Registered'}), 400
@@ -43,7 +49,7 @@ def register_doctor(conn, data, admin_id):
     hashed_password = hash_password(data['staffPassword'])
 
     cursor.execute("""
-        INSERT INTO Doctor (Doctor_FirstName, Doctor_LastName, Doctor_Email, Doctor_Phone_No, Doctor_Registration_Number, Specialization, D_Password, Registered_By_Admin)
+        INSERT INTO Doctor (Doctor_FirstName, Doctor_LastName, Doctor_Email, Doctor_Phone_No, Doctor_Registration_Number, Specialization_ID, D_Password, Registered_By_Admin)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """, (data['staffFirstName'], data['staffLastName'], data['staffEmail'], data['staffPhone'], data['staffRegistrationNumber'], data['staffSpecialization'], hashed_password, admin_id))
     conn.commit()
@@ -55,6 +61,9 @@ def register_nurse(conn, data, admin_id):
     cursor = conn.cursor()
     if not data['staffEmail'] or not data['staffPhone']:
         return jsonify({'message': 'Invalid email or phone number'}), 400
+    
+    if verify_staff(data['staffEmail']) != 'nurse':
+        return jsonify({'message': 'Email should have .nurse'}), 403
 
     cursor.execute("""SELECT 1 FROM Nurse WHERE Nurse_Email = ? OR Nurse_Phone_No = ?""", (data['staffEmail'], data['staffPhone']))
     if cursor.fetchone():
@@ -63,7 +72,7 @@ def register_nurse(conn, data, admin_id):
     hashed_password = hash_password(data['staffPassword'])
 
     cursor.execute("""
-        INSERT INTO Nurse (Nurse_FirstName, Nurse_LastName, Nurse_Email, Nurse_Phone_No, Nurse_Registration_Number, Specialization, N_Password, Registered_By_Admin)
+        INSERT INTO Nurse (Nurse_FirstName, Nurse_LastName, Nurse_Email, Nurse_Phone_No, Nurse_Registration_Number, Specialization_ID, N_Password, Registered_By_Admin)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """, (data['staffFirstName'], data['staffLastName'], data['staffEmail'], data['staffPhone'], data['staffRegistrationNumber'], data['staffSpecialization'], hashed_password, admin_id))
     conn.commit()
@@ -74,12 +83,53 @@ def register_nurse(conn, data, admin_id):
 # Auth Endpoints ----------------------------------------------------------------------------------------------
 
 
+# API endpoint to get specialzation based on the staff type
+@staffauth_bp.route('/get_specializations', methods=['GET'])
+@jwt_required()
+def get_specializations():
+    try:
+        # Retreives the type of staff(Doctor/Nurse) from the query parameter
+        staff_type = request.args.get('staff_type')
+
+        if staff_type not in ['Doctor', 'Nurse']:
+            return jsonify({'error': 'Invalid staff type. Please choose either "Doctor" or "Nurse".'}), 400
+
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+
+            if staff_type == 'Doctor':
+                cursor.execute("""
+                    SELECT Specialization_ID, Specialization_Name
+                    FROM Specialization 
+                """)
+            elif staff_type == 'Nurse':
+                cursor.execute("""
+                    SELECT Specialization_ID, Specialization_Name
+                    FROM Nurse_Specialization 
+
+                """)
+
+            rows = cursor.fetchall()
+
+            specializations = []
+            for row in rows:
+                specializations.append({
+                    'Specialization_ID': row.Specialization_ID,
+                    'Specialization_Name': row.Specialization_Name
+                })
+
+            return jsonify(specializations), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 # Endpoint for staff Creation
 @staffauth_bp.route('/staff/registration',methods=['POST'])
+@jwt_required()
 def createStaffLogin():
     data = request.get_json()
-    admin_Email = data.get('Admin_Email')
-    admin_id = data.get('admin_Id')
+    admin_Email = get_jwt_identity()
     staffType = data.get('staffType')
     staffFirstName = data.get('staffFirstName')
     staffLastName = data.get('staffLastName')
@@ -89,19 +139,34 @@ def createStaffLogin():
     staffSpecialization =  data.get('staffSpecialization')
     staffPassword = data.get('staffPassword')
 
-    if not all([admin_id,admin_Email,staffType,staffFirstName,staffLastName,staffEmail,staffPhone,staffRegistrationNumber,staffSpecialization,staffPassword]):
+    if not all([admin_Email,staffType,staffFirstName,staffLastName,staffEmail,staffPhone,staffRegistrationNumber,staffSpecialization,staffPassword]):
         return jsonify({'message': 'Missing email or password'}), 400
-
-    admin_Email = data['Admin_Email']
+    
+    print(admin_Email)
+    
     if verify_staff(admin_Email) != 'admin':
         return jsonify({'message': 'Admin level rights required for staff registration'}), 403
 
     conn = get_db_connection()
     if conn:
         try:
-            if data['staffType'] == 'doctor':
+            cursor = conn.cursor()
+
+            cursor.execute("""SELECT Specialization_ID FROM Specialization WHERE Specialization_ID = ?""", (staffSpecialization,))
+            specialization_row = cursor.fetchone()
+            if not specialization_row:
+                return jsonify({'message': 'Invalid specialization ID'}), 400
+            
+
+            cursor.execute("""SELECT Admin_id FROM Admin WHERE Admin_Email = ?""", (admin_Email,))
+            admin_row = cursor.fetchone()
+            if not admin_row:
+                return jsonify({'message': 'Cannot find Admin id'}), 400
+            admin_id = admin_row[0]  
+
+            if data['staffType'] == 'Doctor':
                 return register_doctor(conn, data, admin_id)
-            elif data['staffType'] == 'nurse':
+            elif data['staffType'] == 'Nurse':
                 return register_nurse(conn, data, admin_id)
             else:
                 return jsonify({'message': 'Invalid staff type'}), 400
@@ -116,10 +181,10 @@ def createStaffLogin():
 
 # Endpoint for Patient Creation
 @staffauth_bp.route('/gp-patient/registration', methods=['POST'])
+@jwt_required()
 def create_gp_patient():
     data = request.get_json()
-    admin_email = data.get('Admin_Email')
-    admin_id = data.get('admin_Id')
+    admin_email =  get_jwt_identity()
     patient_first_name = data.get('patientFirstName')
     patient_last_name = data.get('patientLastName')
     patient_email = data.get('patientEmail')
@@ -128,7 +193,7 @@ def create_gp_patient():
     dob = data.get('dob')
     patient_password = data.get('patientPassword')
 
-    if not all([admin_id, admin_email, patient_first_name, patient_last_name, patient_email, patient_phone, gender, dob, patient_password]):
+    if not all([ admin_email, patient_first_name, patient_last_name, patient_email, patient_phone, gender, dob, patient_password]):
         return jsonify({'message': 'Missing required fields'}), 400
 
     if verify_staff(admin_email) != 'admin':
@@ -139,7 +204,13 @@ def create_gp_patient():
         try:
             cursor = conn.cursor()
 
-            # Check if patient already exists
+            # Verifies if the Patient alreday exist
+            cursor.execute("""SELECT Admin_id FROM Admin WHERE Admin_Email = ?""", (admin_email,))
+            admin_row = cursor.fetchone()
+            if not admin_row:
+                return jsonify({'message': 'Could not retrieve admin ID from the authenticated user'}), 401
+            admin_id = admin_row[0]
+            
             cursor.execute("""
                 SELECT 1 FROM Patient WHERE Email_Id = ? OR Phone_No = ?
             """, (patient_email, patient_phone))
@@ -150,7 +221,7 @@ def create_gp_patient():
 
             hashed_password = hash_password(patient_password)
 
-            # Convert DOB string to date object
+            # Conversion of DOB string to Date object
             try:
                 dob_date = datetime.datetime.strptime(dob, '%Y-%m-%d').date()
             except ValueError:
@@ -174,6 +245,10 @@ def create_gp_patient():
         return jsonify({'message': 'Database connection failed'}), 500
 
 
+
+
+
+
 # Endpoint for Admin,Doctor and Nurse Login
 @staffauth_bp.route('/staff/login', methods=['POST'])
 def staff_login():
@@ -194,13 +269,16 @@ def staff_login():
     if conn:
         try:
             cursor = conn.cursor()
+            staff_id = None
             if staff_type == "doctor":
                 cursor.execute("""
                     SELECT Doctor_id FROM Doctor 
                     WHERE Doctor_Email = ? AND D_Password = ?
                 """, (email, hashed_password))
                 row = cursor.fetchone()
-                staff_id_field = 'doctor_id'
+                if row:
+                    staff_id = row[0]
+                
 
             elif staff_type == "nurse":
                 cursor.execute("""
@@ -208,7 +286,9 @@ def staff_login():
                     WHERE Nurse_Email = ? AND N_Password = ?
                 """, (email, hashed_password))
                 row = cursor.fetchone()
-                staff_id_field = 'nurse_id'
+                if row:
+                    staff_id = row[0]
+                
 
             elif staff_type == "admin":
                 cursor.execute("""
@@ -216,22 +296,30 @@ def staff_login():
                     WHERE Admin_Email = ? AND Admin_Password = ?
                 """, (email, hashed_password))
                 row = cursor.fetchone()
-                staff_id_field = 'admin_id'
+                if row:
+                    staff_id = row[0]
+                
 
             if not row:
                 return jsonify({'message': 'Invalid email or password'}), 401
+            
+            # creates access and refresh tokens 
+            access_token = create_access_token(identity=email)
+            refresh_token = create_refresh_token(identity=email)
 
-            staff_id = row[0]
+            response = make_response(jsonify({
+            'message': 'Staff Login successful',
+            'email': email,
+            'staffType': staff_type,
+            'staffId': staff_id
+            }))
+            print(f"Staff logged in with ID: {staff_id}")
 
-            payload = {
-                staff_id_field: staff_id,
-                'email': email,
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
-            }
-            token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+            # Setting accesss cookie to deal with protected route access 
+            set_access_cookies(response, access_token)
 
-            response = make_response(jsonify({'message': 'Login successful','staffType':staff_type}), 200)
-            response.set_cookie('access_token', token, httponly=True, secure=True, samesite='Strict')
+            # Setting refresh cookie to deal with browser refresh
+            set_refresh_cookies(response, refresh_token)
 
             return response
 

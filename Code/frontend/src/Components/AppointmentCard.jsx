@@ -20,9 +20,11 @@ const AppointmentCard = ({ data, onCancel }) => {
           <tbody>
             {data.rows.map((row, index) => (
               <tr key={index}>
-                {row.map((cell, cellIndex) => (
-                  <td key={cellIndex}>{cell}</td>
-                ))}
+                <td>{row.appointment_id}</td>
+                <td>{row.doctor}</td>
+                <td>{row.date}</td>
+                <td>{row.time}</td>
+                <td>{row.status}</td>
                 {onCancel && (
                   <td>
                     <CancelAppointmentButtom

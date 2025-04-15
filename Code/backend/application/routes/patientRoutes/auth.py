@@ -1,21 +1,24 @@
-from flask import Blueprint, Flask, jsonify, request, make_response
+from flask import Blueprint, jsonify, request, make_response
 from application.utils.db_helpers import get_db_connection
-import pyodbc
 import hashlib
 import os
-import datetime
+from datetime import timedelta
 import jwt
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, set_access_cookies, set_refresh_cookies, unset_jwt_cookies
 
 auth_bp = Blueprint('auth', __name__)
 
 JWT_SECRET = os.getenv('JWT_SECRET', 'GP_UK')
 JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
 
+
 # Utility functions
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# Register patient Endpoint
+
+
+# API endpoint to Register patient
 @auth_bp.route('/patient/register', methods=['POST'])
 def register_patient():
     data = request.get_json()
@@ -35,7 +38,7 @@ def register_patient():
         try:
             cursor = conn.cursor()
 
-            # Checks if the patient is already registered
+            # Checks if the patient alreday exists.
             cursor.execute("""
                 SELECT 1 FROM Patient WHERE Email_Id = ? OR Phone_No = ?
             """, (email, phone))
@@ -62,7 +65,9 @@ def register_patient():
 
 
 
-# Login patient Endpoint
+
+
+# API endpoint for Patient login
 @auth_bp.route('/patient/login', methods=['POST'])
 def patient_login():
     data = request.get_json()
@@ -79,31 +84,49 @@ def patient_login():
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT P_id FROM Patient 
+                SELECT P_id, Email_Id, P_FirstName, P_LastName
+                FROM Patient
                 WHERE Email_Id = ? AND PatientPassword = ?
             """, (email, hashed_password))
             row = cursor.fetchone()
 
             if not row:
                 return jsonify({'message': 'Invalid email or password'}), 401
-            
-            patient_id = row[0]
 
-            payload = {
+            patient_id, patient_email, p_first_name, p_last_name = row
+            patient_name = f"{p_first_name} {p_last_name}"
+
+            # creates access and refresh tokens 
+            access_token = create_access_token(identity=patient_email)
+            refresh_token = create_refresh_token(identity=patient_email)
+
+            response = make_response(jsonify({
+                'message': 'Login successful',
                 'patient_id': patient_id,
-                'email': email,
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)  # Token expires in 24 hours
-            }
-            token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+                'email': patient_email,
+                'patient_name': patient_name
+            }))
 
-            response = make_response(jsonify({'message': 'Login successful'}), 200)
-            response.set_cookie('access_token', token, httponly=True, secure=True, samesite='Strict')
+            # Setting accesss cookie to deal with protected route access 
+            set_access_cookies(response, access_token)
+
+            # Setting refresh cookie to deal with browser refresh
+            set_refresh_cookies(response, refresh_token)
+
             return response
-    
-        
+
         except Exception as e:
             return jsonify({'message': f'Error: {e}'}), 500
         finally:
             conn.close()
     else:
         return jsonify({'message': 'Database connection failed'}), 500
+
+
+
+# API endpoint : Logout
+@auth_bp.route('/logout', methods=['POST'])
+def patient_logout():
+    response = jsonify({'message': 'Logout successful'})
+    unset_jwt_cookies(response)
+    return response

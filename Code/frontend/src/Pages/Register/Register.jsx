@@ -12,7 +12,7 @@ const Register = () => {
   const [registerError, setRegisterError] = useState(null);
 
   const handleRegister = async (registrationData) => {
-    //API call
+    //API call for patient regsitration
     try {
       console.log("Registration Data:", registrationData);
       const response = await fetch(`${BASE_URL}/patient/register`, {

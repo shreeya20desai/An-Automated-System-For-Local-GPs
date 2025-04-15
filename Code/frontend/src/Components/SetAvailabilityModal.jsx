@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
-function SetDoctorAvailabilityModal({
+function SetAvailabilityModal({
   showConfirmation,
   setShowConfirmation,
   confirmAddAvailability,
@@ -24,4 +24,4 @@ function SetDoctorAvailabilityModal({
   );
 }
 
-export default SetDoctorAvailabilityModal;
+export default SetAvailabilityModal;

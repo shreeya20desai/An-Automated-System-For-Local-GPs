@@ -5,20 +5,23 @@ import hashlib
 import os
 import datetime
 import jwt
+from flask_jwt_extended import jwt_required,get_jwt_identity
 
 staffAvailability_bp = Blueprint('staffAvail', __name__)
 
 JWT_SECRET = os.getenv('JWT_SECRET', 'GP_UK')
 JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
 
-# Endpoint for Set Doctor availbility
-
+# API Endpoint for Set Doctor availbility
+@staffAvailability_bp.route('/set_doctor_availability', methods=['POST'])
+@jwt_required()
 def set_doctor_availability():
+    print("Preflight OPTIONS Cookies:", request.cookies)
     try:
         data = request.get_json()
         doctor_id = data['doctor_id']
         date = data['date']
-        slot_ids = data['slot_ids']  # An array of slot IDs
+        slot_ids = data['slot_ids']  # array of slot IDs
 
         with get_db_connection() as conn:
             cursor = conn.cursor()
@@ -33,7 +36,7 @@ def set_doctor_availability():
                 existing_availability = cursor.fetchone()
 
                 if existing_availability:
-                    return jsonify({'message': f'Nurse availability already set for slot ID: {slot_id}'}), 400
+                    return jsonify({'message': f'Doctor availability already set for slot ID: {slot_id}'}), 400
                 else:
                     cursor.execute(
                         "INSERT INTO DoctorAvailability (DoctorID, Date, SlotID) VALUES (?, ?, ?)",
@@ -48,8 +51,9 @@ def set_doctor_availability():
     
 
     
-# Endpoint to cancel doctors availibilty
+#API Endpoint to cancel doctors availibilty
 @staffAvailability_bp.route('/cancel_doctor_availability/<int:doctor_id>/<string:date>/<int:slot_id>', methods=['DELETE'])
+@jwt_required()
 def cancel_doctor_availability(doctor_id, date, slot_id):
     try:
         with get_db_connection() as conn:
@@ -67,8 +71,11 @@ def cancel_doctor_availability(doctor_id, date, slot_id):
         return jsonify({'error': str(e)}), 500
 
 
-#Endpoint for Set Nurse Availability
+
+
+#API Endpoint for Set Nurse Availability
 @staffAvailability_bp.route('/set_nurse_availability', methods=['POST'])
+@jwt_required()
 def set_nurse_availability():
     try:
         data = request.get_json()
@@ -103,8 +110,9 @@ def set_nurse_availability():
 
 
 
-# Endpoint to cancel nurse availibilty
+# API Endpoint to cancel nurse availibilty
 @staffAvailability_bp.route('/cancel_nurse_availability/<int:nurse_id>/<string:date>/<int:slot_id>', methods=['DELETE'])
+@jwt_required()
 def cancel_nurse_availability(nurse_id, date, slot_id):
     try:
         with get_db_connection() as conn:

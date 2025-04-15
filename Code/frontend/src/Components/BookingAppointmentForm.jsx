@@ -7,52 +7,21 @@ import "react-calendar/dist/Calendar.css";
 // https://react-bootstrap.netlify.app/docs/forms/form-text
 // https://react-bootstrap.netlify.app/docs/forms/select
 
-const BookingAppintmentForm = ({
+const BookingAppointmentForm = ({
   onSubmit,
-  name,
-  email,
-  contactNumber,
-  setContactNumber,
   selectedProblem,
   setSelectedProblem,
-  problemOptions,
+  problemOptions = [],
+  problems,
+  navigateToInfoPage,
 }) => {
+  const selected =
+    Array.isArray(problemOptions) &&
+    problemOptions.find(
+      (problem) => problem.disease_id.toString() === selectedProblem
+    );
   return (
     <Form onSubmit={onSubmit}>
-      <Form.Group className="mb-3">
-        <Form.Label>Name</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter your name"
-          value={name}
-          readOnly
-          required
-        />
-      </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Label>Email Address</Form.Label>
-        <Form.Control
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          readOnly
-          required
-        />
-      </Form.Group>
-
-      {/* might change in future */}
-      <Form.Group className="mb-3">
-        <Form.Label>Contact Number</Form.Label>
-        <Form.Control
-          type="tel"
-          placeholder="Enter your contact number"
-          value={contactNumber}
-          onChange={(e) => setContactNumber(e.target.value)}
-          required
-        />
-      </Form.Group>
-
       <Form.Group className="mb-3">
         <Form.Label>Type of Problem Faced</Form.Label>
         <Form.Select
@@ -69,6 +38,21 @@ const BookingAppintmentForm = ({
         </Form.Select>
       </Form.Group>
 
+      {/* Articles to display */}
+      {selected && (
+        <div style={{ marginTop: "1rem" }}>
+          <p>
+            Precaution taken at early stage{" "}
+            <strong>{selected.disease_name}</strong>:{" "}
+            <Button
+              variant="link"
+              onClick={() => navigateToInfoPage(selected.path)}
+            >
+              Click here
+            </Button>
+          </p>
+        </div>
+      )}
       <Button variant="primary" type="submit">
         Next
       </Button>
@@ -76,4 +60,4 @@ const BookingAppintmentForm = ({
   );
 };
 
-export default BookingAppintmentForm;
+export default BookingAppointmentForm;

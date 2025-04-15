@@ -1,13 +1,22 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
+import { BASE_URL } from "../../src/config";
+
 function LogoutButton() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      await fetch(`${BASE_URL}/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
-
   return (
     <button
       className="btn btn-dark"

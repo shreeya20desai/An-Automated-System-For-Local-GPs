@@ -7,7 +7,6 @@ import AddStaffForm from "../../Components/AddStaff";
 import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
-  //Controls The Visibility
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showAddPatientForm, setShowAddPatientForm] = useState(false);
   const [showAddStaffForm, setShowAddStaffForm] = useState(false);
