@@ -139,6 +139,29 @@ VALUES
 ('Chickenpox', 5);  -- Dermatology
 
 
+INSERT INTO Disease ( Disease_Name, Specialization_id) VALUES
+('Acne', 5),
+('Psoriasis', 5),
+('Thyroid Disorder', 8),
+('Hypoglycemia', 8),
+('Heart Attack', 1),
+('Arrhythmia', 1),
+('Stroke', 2),
+('Epilepsy', 2),
+('Colon Polyps', 6),
+('Ulcerative Colitis', 6),
+('Breast Cancer', 7),
+('Leukemia', 7),
+('Cataract', 10),
+('Glaucoma', 10),
+('Fracture', 3),
+('Arthritis', 3),
+('Tonsillitis', 4),
+('Measles', 4),
+('Urinary Tract Infection', 9),
+('Kidney Stones', 9);
+
+
 CREATE TABLE Specialization (
     Specialization_id INT PRIMARY KEY IDENTITY(1,1),
     Specialization_Name VARCHAR(255) UNIQUE NOT NULL

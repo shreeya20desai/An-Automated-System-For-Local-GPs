@@ -11,3 +11,18 @@ CREATE TABLE Patient (
     Phone_No VARCHAR(15) NOT NULL UNIQUE,
     PatientPassword VARCHAR(255) NOT NULL
 );
+
+ALTER TABLE Patient
+ADD 
+    StreetAddress VARCHAR(100) NOT NULL DEFAULT 'TBD',
+    City VARCHAR(100) NOT NULL DEFAULT 'TBD',
+    Postcode VARCHAR(10) NOT NULL DEFAULT '00000';
+
+ALTER TABLE Patient
+ADD CONSTRAINT UQ_Patient_PhoneNo UNIQUE (Phone_No);
+
+
+ALTER TABLE Patient
+DROP CONSTRAINT UQ__Patient__F8A74A4E3CACEDA6;
+
+select * from  patient

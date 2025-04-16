@@ -49,3 +49,11 @@ Use GP;
 
 	ALTER TABLE Appointment
 ADD CONSTRAINT UC_DoctorDateSlot UNIQUE (DoctorID, Date, SlotID);
+
+ALTER TABLE Appointment
+ADD DiseaseType VARCHAR(20);
+
+ALTER TABLE Appointment
+ADD DiseaseDescription VARCHAR(100);
+
+Select * FROM Appointment
