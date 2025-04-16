@@ -4,6 +4,7 @@ import TopNavbar from "../../Components/TopNavBar";
 import LeftNavbar from "../../Components/LeftNavBar";
 import SetDoctorAvailability from "../../Components/SetDoctorAvailability";
 import StaffProfile from "../../Components/StaffProfile";
+import GetPatientBooking from "../../Components/GetPatientBooking";
 
 const StaffDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -11,6 +12,7 @@ const StaffDashboard = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [staffType, setStaffType] = useState("");
   const [sidebarLinks, setSidebarLinks] = useState([]);
+  const [showGetPatientBooking, setShowGetPatientBooking] = useState(false);
 
   useEffect(() => {
     const storedStaffType = localStorage.getItem("staffType");
@@ -26,14 +28,28 @@ const StaffDashboard = () => {
         onClick: () => {
           setShowSetAvailability(true);
           setShowProfile(false);
+          setShowGetPatientBooking(false);
         },
       },
+
+      {
+        id: "getPatientBooking",
+        originalName: "Appointment_Bookings",
+        displayName: "Get Patient Booking",
+        onClick: () => {
+          setShowSetAvailability(false);
+          setShowProfile(false);
+          setShowGetPatientBooking(true);
+        },
+      },
+
       {
         id: "prescriptions",
         originalName: "Prescriptions",
         displayName: "Prescriptions",
         href: "#Medications",
       },
+
       {
         id: "records",
         originalName: "Medical Records",
@@ -47,6 +63,7 @@ const StaffDashboard = () => {
         onClick: () => {
           setShowSetAvailability(false);
           setShowProfile(true);
+          setShowGetPatientBooking(false);
         },
       },
     ];
@@ -85,6 +102,7 @@ const StaffDashboard = () => {
           <Col xs={12} md={{ span: 9, offset: 3 }} lg={{ span: 10, offset: 2 }}>
             {showSetAvailability && <SetDoctorAvailability />}
             {showProfile && <StaffProfile staffType={staffType} />}
+            {showGetPatientBooking && <GetPatientBooking />}
           </Col>
         </Row>
       </Container>

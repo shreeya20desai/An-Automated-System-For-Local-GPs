@@ -141,6 +141,8 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
         patient_id: patientInfo.id,
         date: formatDate(selectedDate),
         slot_id: timeSlot.id,
+        disease_type: selectedProblem,
+        disease_description: "",
       }),
     })
       .then((response) => response.json())

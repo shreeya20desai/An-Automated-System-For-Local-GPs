@@ -11,7 +11,9 @@ import CoughPage from './Components/Cough.jsx';
 import FeverPage from './Components/Fever.jsx';
 import Abdonimalpain from './Components/Abdominalpain.jsx';
 
+
 function App() {
+
   return (
     <BrowserRouter>
       <Routes>
@@ -24,6 +26,7 @@ function App() {
         <Route path="/CoughPage" element={<CoughPage />} />
         <Route path="/FeverPage" element={<FeverPage />} />
         <Route path="/Abdonimalpage" element={<Abdonimalpain />} />
+
       </Routes>
     </BrowserRouter>
   );

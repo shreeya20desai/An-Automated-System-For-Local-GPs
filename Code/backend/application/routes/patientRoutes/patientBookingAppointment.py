@@ -124,16 +124,21 @@ def get_doctor_availability(doctor_id, date):
 
 
     # API endpoint to book appointment  
-    @patientBooking_bp.route('/book_appointment', methods=['POST'])
-    @jwt_required()
-    def book_appointment():
+@patientBooking_bp.route('/book_appointment', methods=['POST'])
+@jwt_required()
+def book_appointment():
         try:
             data = request.get_json()
             doctor_id = data['doctor_id']
             patient_id = data['patient_id']
             date = data['date']
             slot_id = data['slot_id']
+            disease_type = data.get('disease_type')
+            disease_description = data.get('disease_description') 
 
+            if not disease_type:
+                return jsonify({'error': 'Disease type is required'}), 400
+            
             with get_db_connection() as conn:
                 cursor = conn.cursor()
 
@@ -156,8 +161,11 @@ def get_doctor_availability(doctor_id, date):
                     return jsonify({'error': 'Slot is already booked'}), 400
 
                 cursor.execute(
-                    "INSERT INTO Appointment (DoctorID, PatientID, Date, SlotID) VALUES (?, ?, ?, ?)",
-                    doctor_id, patient_id, date, slot_id
+                """
+                INSERT INTO Appointment (DoctorID, PatientID, Date, SlotID, DiseaseType, DiseaseDescription)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                doctor_id, patient_id, date, slot_id, disease_type, disease_description
                 )
                 conn.commit()
                 return jsonify({'message': 'Appointment booked successfully'}), 201
@@ -174,9 +182,9 @@ def get_doctor_availability(doctor_id, date):
 
 
     # API endpoint to get the my appointment
-    @patientBooking_bp.route('/my_appointments', methods=['GET'])
-    @jwt_required()
-    def get_patient_appointments():
+@patientBooking_bp.route('/my_appointments', methods=['GET'])
+@jwt_required()
+def get_patient_appointments():
         try:
             patient_email = get_jwt_identity()
             print(patient_email)
@@ -225,8 +233,9 @@ def get_doctor_availability(doctor_id, date):
 
 
     #API ENDPOINT to cancel appointment
-    @patientBooking_bp.route('/cancel_appointment/<int:appointment_id>', methods=['DELETE'])
-    def cancel_appointment(appointment_id):
+@patientBooking_bp.route('/cancel_appointment/<int:appointment_id>', methods=['DELETE'])
+@jwt_required()
+def cancel_appointment(appointment_id):
         try:
             with get_db_connection() as conn:
                 cursor = conn.cursor()

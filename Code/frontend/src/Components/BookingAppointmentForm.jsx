@@ -14,6 +14,8 @@ const BookingAppointmentForm = ({
   problemOptions = [],
   problems,
   navigateToInfoPage,
+  diseaseDescription,
+  setDiseaseDescription,
 }) => {
   const selected =
     Array.isArray(problemOptions) &&
@@ -22,6 +24,26 @@ const BookingAppointmentForm = ({
     );
   return (
     <Form onSubmit={onSubmit}>
+      <Form.Group controlId="diseaseDescription">
+        <Form.Label>Description </Form.Label>
+        <Form.Control
+          as="textarea"
+          rows={3}
+          placeholder="Describe your symptoms"
+          value={diseaseDescription}
+          onChange={(e) => {
+            //Splits the string into an array using the spaces for eg. I am looking.("I", "", "am", "", "looking")
+            const words = e.target.value.split(" ");
+            if (words.length <= 200) {
+              setDiseaseDescription(e.target.value);
+            }
+          }}
+        />
+        <Form.Text className="text-muted">
+          {diseaseDescription.split(" ").filter(Boolean).length}/200 words
+        </Form.Text>
+      </Form.Group>
+
       <Form.Group className="mb-3">
         <Form.Label>Type of Problem Faced</Form.Label>
         <Form.Select

@@ -192,8 +192,11 @@ def create_gp_patient():
     gender = data.get('gender')
     dob = data.get('dob')
     patient_password = data.get('patientPassword')
+    street_address = data.get('streetAddress') 
+    city = data.get('city')  
+    postcode = data.get('postcode')
 
-    if not all([ admin_email, patient_first_name, patient_last_name, patient_email, patient_phone, gender, dob, patient_password]):
+    if not all([ admin_email, patient_first_name, patient_last_name, patient_email, patient_phone, gender, dob, patient_password,street_address,city,postcode]):
         return jsonify({'message': 'Missing required fields'}), 400
 
     if verify_staff(admin_email) != 'admin':
@@ -228,9 +231,9 @@ def create_gp_patient():
                 return jsonify({'message': 'Invalid date format. Please use YYYY-MM-DD'}), 400
 
             cursor.execute("""
-                INSERT INTO Patient (P_FirstName, P_LastName, Gender, DOB, Email_Id, Phone_No, PatientPassword, Registered_By_Admin)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """, (patient_first_name, patient_last_name, gender, dob_date, patient_email, patient_phone, hashed_password, admin_id))
+                INSERT INTO Patient (P_FirstName, P_LastName, Gender, DOB, Email_Id, Phone_No, PatientPassword, Registered_By_Admin, StreetAddress, City, Postcode)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (patient_first_name, patient_last_name, gender, dob_date, patient_email, patient_phone, hashed_password, admin_id, street_address, city, postcode))
 
             conn.commit()
             return jsonify({'message': 'Patient registered successfully'}), 201
@@ -328,5 +331,84 @@ def staff_login():
             return jsonify({'message': f'Error: {e}'}), 500
         finally:
             conn.close()
+    else:
+        return jsonify({'message': 'Database connection failed'}), 500
+    
+
+
+
+#API Endpoint for Staff Profile
+@staffauth_bp.route('/staffProfile', methods=['GET'])
+@jwt_required()
+def getStaffProfile():
+    userEmail = get_jwt_identity()
+
+    if not userEmail:
+        return jsonify({'message': 'Missing email'}), 400
+
+    userType = verify_staff(userEmail)
+    conn = get_db_connection()
+
+    if conn:
+        try:
+            cursor = conn.cursor()
+
+            if userType == 'doctor':
+                cursor.execute("""
+                    SELECT D.Doctor_FirstName, D.Doctor_LastName, D.Doctor_Email, D.Doctor_Phone_No, 
+                           D.Doctor_Registration_Number, S.Specialization_Name
+                    FROM Doctor D
+                    JOIN Specialization S ON D.Specialization_ID = S.Specialization_ID
+                    WHERE D.Doctor_Email = ?
+                """, (userEmail,))
+
+                doctorProfile = cursor.fetchone()
+
+                if not doctorProfile:
+                    return jsonify({'message': 'No doctor found with this email'}), 400
+
+                profile = {
+                    'FirstName': doctorProfile[0],
+                    'LastName': doctorProfile[1],
+                    'Email': doctorProfile[2],
+                    'PhoneNo': doctorProfile[3],
+                    'RegistrationNumber': doctorProfile[4],
+                    'Specialization': doctorProfile[5]
+                }
+                return jsonify({'profile': profile}), 200
+
+            elif userType == 'nurse':
+                cursor.execute("""
+                    SELECT N.Nurse_FirstName, N.Nurse_LastName, N.Nurse_Email, N.Nurse_Phone_No, 
+                           N.Nurse_Registration_Number, S.Specialization_Name
+                    FROM Nurse N
+                    JOIN Nurse_Specialization S ON N.Specialization_ID = S.Specialization_ID
+                    WHERE N.Nurse_Email = ?
+                """, (userEmail,))
+
+                nurseProfile = cursor.fetchone()
+
+                if not nurseProfile:
+                    return jsonify({'message': 'No nurse found with this email'}), 400
+
+                profile = {
+                    'FirstName': nurseProfile[0],
+                    'LastName': nurseProfile[1],
+                    'Email': nurseProfile[2],
+                    'PhoneNo': nurseProfile[3],
+                    'RegistrationNumber': nurseProfile[4],
+                    'Specialization': nurseProfile[5]
+                }
+                return jsonify({'profile': profile}), 200
+
+            else:
+                return jsonify({'message': 'User type not recognized'}), 400
+
+        except Exception as e:
+            return jsonify({'message': f'Error: {e}'}), 500
+
+        finally:
+            conn.close()
+
     else:
         return jsonify({'message': 'Database connection failed'}), 500

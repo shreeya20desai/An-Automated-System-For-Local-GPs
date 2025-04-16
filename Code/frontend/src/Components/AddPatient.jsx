@@ -11,6 +11,9 @@ const AddPatientForm = ({ adminEmail, adminId }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postcode, setPostcode] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +39,9 @@ const AddPatientForm = ({ adminEmail, adminId }) => {
           gender,
           dob,
           patientPassword,
+          streetAddress,
+          city,
+          postcode,
         }),
       });
 
@@ -51,6 +57,9 @@ const AddPatientForm = ({ adminEmail, adminId }) => {
         setConfirmPassword("");
         setDob("");
         setGender("");
+        setStreetAddress("");
+        setCity("");
+        setPostcode("");
       } else {
         console.error(
           "Error registering patient:",
@@ -71,9 +80,9 @@ const AddPatientForm = ({ adminEmail, adminId }) => {
   return (
     <Row className="justify-content-md-center mt-5">
       <Col xs={12} md={8} lg={6}>
-        <Card>
+        <Card style={{ height: "500px" }}>
           <Card.Header style={{ textAlign: "center" }}>Add Patient</Card.Header>
-          <Card.Body>
+          <Card.Body style={{ overflowY: "auto", height: "calc(100% - 50px)" }}>
             <Form onSubmit={handleSubmit}>
               {/* First and Last name */}
               <Row>
@@ -157,6 +166,49 @@ const AddPatientForm = ({ adminEmail, adminId }) => {
                       <option value="female">Female</option>
                       <option value="other">Other</option>
                     </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              {/* Street Address, City & Postcode */}
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Street Address</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter street address"
+                      value={streetAddress}
+                      onChange={(e) => setStreetAddress(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>City</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter city"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Postcode</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter postcode"
+                      value={postcode}
+                      onChange={(e) => setPostcode(e.target.value)}
+                      required
+                    />
                   </Form.Group>
                 </Col>
               </Row>
