@@ -24,6 +24,7 @@ INSERT INTO pharmacy (pharmacy_id, name, street, city, postcode, contact_number,
 (9, 'Tesco Pharmacy - Hamilton', '5 Maidenwell Avenue, Hamilton', 'Leicester', 'LE5 1BJ', '0345 677 9310', '09:00:00', '18:30:00');
 
 
+
 CREATE TABLE medicine (
     medicine_id INT PRIMARY KEY IDENTITY(1,1),
     medicine_name VARCHAR(100) NOT NULL,
@@ -99,4 +100,12 @@ SET price = CASE medicine_id
     WHEN 24 THEN 60.00
     WHEN 25 THEN 110.00
     ELSE NULL
-END;
+END
+	
+
+-- Student_Price (10% discount)
+ALTER TABLE [GP].[dbo].[medicine]
+ADD student_price AS CAST(price * 0.90 AS DECIMAL(10,2));
+
+
+select * from medicine
