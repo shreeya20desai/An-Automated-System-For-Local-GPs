@@ -5,6 +5,7 @@ import LeftNavbar from "../../../Components/LeftNavBar";
 import AppointmentCard from "../../../Components/AppointmentCard";
 import BookAppointmentButton from "../../../Components/BookAppointmentButton";
 import BookingAppointment from "../../../Components/BookingAppointment";
+import ViewPrescriptions from "../../../Components/ViewPrescriptions";
 import Profile from "../../../Components/Profile";
 import { BASE_URL } from "../../../config";
 
@@ -13,6 +14,7 @@ const Dashboard = () => {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [showAppointmentContent, setShowAppointmentContent] = useState(true);
   const [showProfile, setProfile] = useState(false);
+  const [showPrescriptions, setShowPrescriptions] = useState(false);
 
   //headers for the table, appointments table
   const [appointmentData, setAppointmentData] = useState({
@@ -124,14 +126,21 @@ const Dashboard = () => {
         setShowAppointmentContent(true);
         setShowBookingForm(false);
         setProfile(false);
+        setShowPrescriptions(false);
       },
     },
     {
       id: "prescriptions",
       originalName: "Prescriptions",
       displayName: "Prescriptions",
-      href: "#Medications",
+      onClick: () => {
+        setShowAppointmentContent(false);
+        setShowBookingForm(false);
+        setProfile(false);
+        setShowPrescriptions(true);
+      },
     },
+
     {
       id: "records",
       originalName: "Medical Records",
@@ -145,6 +154,7 @@ const Dashboard = () => {
       onClick: () => {
         setShowAppointmentContent(false);
         setShowBookingForm(false);
+        setShowPrescriptions(false);
         setProfile(true);
       },
     },
@@ -200,6 +210,7 @@ const Dashboard = () => {
             )}
 
             {showProfile && <Profile />}
+            {showPrescriptions && <ViewPrescriptions />}
           </Col>
         </Row>
       </Container>

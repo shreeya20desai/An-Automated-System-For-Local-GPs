@@ -5,6 +5,7 @@ import LeftNavbar from "../../Components/LeftNavBar";
 import SetDoctorAvailability from "../../Components/SetDoctorAvailability";
 import StaffProfile from "../../Components/StaffProfile";
 import GetPatientBooking from "../../Components/GetPatientBooking";
+import ProvidePrescription from "../../Components/ProvidePrescription";
 
 const StaffDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -13,6 +14,7 @@ const StaffDashboard = () => {
   const [staffType, setStaffType] = useState("");
   const [sidebarLinks, setSidebarLinks] = useState([]);
   const [showGetPatientBooking, setShowGetPatientBooking] = useState(false);
+  const [showPrescription, setShowPrescription] = useState(false);
 
   useEffect(() => {
     const storedStaffType = localStorage.getItem("staffType");
@@ -29,6 +31,7 @@ const StaffDashboard = () => {
           setShowSetAvailability(true);
           setShowProfile(false);
           setShowGetPatientBooking(false);
+          setShowPrescription(false);
         },
       },
 
@@ -40,6 +43,7 @@ const StaffDashboard = () => {
           setShowSetAvailability(false);
           setShowProfile(false);
           setShowGetPatientBooking(true);
+          setShowPrescription(false);
         },
       },
 
@@ -47,7 +51,12 @@ const StaffDashboard = () => {
         id: "prescriptions",
         originalName: "Prescriptions",
         displayName: "Prescriptions",
-        href: "#Medications",
+        onClick: () => {
+          setShowSetAvailability(false);
+          setShowProfile(false);
+          setShowGetPatientBooking(false);
+          setShowPrescription(true);
+        },
       },
 
       {
@@ -103,6 +112,7 @@ const StaffDashboard = () => {
             {showSetAvailability && <SetDoctorAvailability />}
             {showProfile && <StaffProfile staffType={staffType} />}
             {showGetPatientBooking && <GetPatientBooking />}
+            {showPrescription && <ProvidePrescription />}
           </Col>
         </Row>
       </Container>

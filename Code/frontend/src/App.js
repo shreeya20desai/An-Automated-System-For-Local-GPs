@@ -27,6 +27,7 @@ function App() {
         <Route path="/FeverPage" element={<FeverPage />} />
         <Route path="/Abdonimalpage" element={<Abdonimalpain />} />
 
+
       </Routes>
     </BrowserRouter>
   );

@@ -4,14 +4,15 @@ import TopNavbar from "../../../src/Components/TopNavBar";
 import LeftNavbar from "../../../src/Components/LeftNavBar";
 import AddPatientForm from "../../Components/AddPatient";
 import AddStaffForm from "../../Components/AddStaff";
-import { useNavigate } from "react-router-dom";
+import PatientList from "../../Components/PatientList";
+import StaffList from "../../Components/StaffList";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showAddPatientForm, setShowAddPatientForm] = useState(false);
   const [showAddStaffForm, setShowAddStaffForm] = useState(false);
-
-  const navigate = useNavigate();
+  const [showPatientList, setShowPatientList] = useState(false);
+  const [showStaffList, setShowStaffList] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -21,50 +22,72 @@ const AdminDashboard = () => {
     setIsSidebarOpen(false);
   };
 
-  //Handles the AddPatientClick
-  const handleAddPatientClick = () => {
-    setShowAddStaffForm(false);
-    setShowAddPatientForm(true);
-  };
-
-  const handlePatientFormClose = () => {
-    setShowAddPatientForm(false);
-  };
-
-  //Handles the AddStaffClick
-  const handleAddStaffClick = () => {
-    setShowAddStaffForm(true);
-    setShowAddPatientForm(false);
-  };
-
-  const handleStaffFormClose = () => {
-    setShowAddStaffForm(false);
-  };
-
   const navbarLinks = [
     {
       id: "addPatients",
       originalName: "Profile",
       displayName: "Add Patients",
-      onClick: handleAddPatientClick,
+      onClick: () => {
+        setShowAddStaffForm(false);
+        setShowAddPatientForm(true);
+        setShowPatientList(false);
+        setShowStaffList(false);
+      },
     },
     {
       id: "addDoctors",
       originalName: "Profile",
       displayName: "Add Staff",
-      onClick: handleAddStaffClick,
+      onClick: () => {
+        setShowAddStaffForm(true);
+        setShowAddPatientForm(false);
+        setShowPatientList(false);
+        setShowStaffList(false);
+      },
     },
     {
       id: "appointments",
       originalName: "Appointment_Bookings",
       displayName: "Manage Bookings",
-      href: "#Schedule",
+      onClick: () => {
+        setShowAddStaffForm(false);
+        setShowAddPatientForm(false);
+        setShowPatientList(false);
+        setShowStaffList(false);
+      },
     },
     {
       id: "setAvailability",
       originalName: "Appointment_Bookings",
       displayName: "Set Availability",
-      href: "#Schedule",
+      onClick: () => {
+        setShowAddStaffForm(false);
+        setShowAddPatientForm(false);
+        setShowPatientList(false);
+        setShowStaffList(false);
+      },
+    },
+    {
+      id: "setAvailability",
+      originalName: "Profile",
+      displayName: "Patient List",
+      onClick: () => {
+        setShowAddStaffForm(false);
+        setShowAddPatientForm(false);
+        setShowPatientList(true);
+        setShowStaffList(false);
+      },
+    },
+    {
+      id: "setAvailability",
+      originalName: "Profile",
+      displayName: "Staff List",
+      onClick: () => {
+        setShowAddStaffForm(false);
+        setShowAddPatientForm(false);
+        setShowPatientList(false);
+        setShowStaffList(true);
+      },
     },
   ];
 
@@ -78,8 +101,8 @@ const AdminDashboard = () => {
         onClose={closeSidebar}
         links={navbarLinks}
       />
+
       <Container fluid style={{ paddingTop: "76px" }}>
-        {/* Display Add PatientForm */}
         {showAddPatientForm && (
           <Row>
             <Col
@@ -87,12 +110,11 @@ const AdminDashboard = () => {
               md={{ span: 9, offset: 3 }}
               lg={{ span: 10, offset: 2 }}
             >
-              <AddPatientForm onClose={handlePatientFormClose} />
+              <AddPatientForm />
             </Col>
           </Row>
         )}
 
-        {/* Display Add StaffForm */}
         {showAddStaffForm && (
           <Row>
             <Col
@@ -100,7 +122,31 @@ const AdminDashboard = () => {
               md={{ span: 9, offset: 3 }}
               lg={{ span: 10, offset: 2 }}
             >
-              <AddStaffForm onClose={handleStaffFormClose} />
+              <AddStaffForm />
+            </Col>
+          </Row>
+        )}
+
+        {showPatientList && (
+          <Row>
+            <Col
+              xs={12}
+              md={{ span: 9, offset: 3 }}
+              lg={{ span: 10, offset: 2 }}
+            >
+              <PatientList />
+            </Col>
+          </Row>
+        )}
+
+        {showStaffList && (
+          <Row>
+            <Col
+              xs={12}
+              md={{ span: 9, offset: 3 }}
+              lg={{ span: 10, offset: 2 }}
+            >
+              <StaffList />
             </Col>
           </Row>
         )}

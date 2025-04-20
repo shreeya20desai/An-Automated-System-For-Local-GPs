@@ -18,17 +18,20 @@ def get_doctor_appointments_by_date(date):
         with get_db_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT a.AppointmentID, a.PatientID, p.P_FirstName, p.P_LastName, s.StartTime, s.EndTime
+                SELECT d.Disease_Name, a.AppointmentID, a.PatientID, 
+                       p.P_FirstName, p.P_LastName, s.StartTime, s.EndTime
                 FROM Appointment a
                 JOIN Patient p ON a.PatientID = p.P_id
                 JOIN Slots s ON a.SlotID = s.SlotID
+                JOIN Disease d ON a.DiseaseType = d.Disease_id
                 WHERE a.Date = ?
-            """,  date)
+            """, (date,))
             rows = cursor.fetchall()
-
+    
             appointments = []
             for row in rows:
                 appointments.append({
+                     'disease_name': row.Disease_Name,
                     'appointment_id': row.AppointmentID,
                     'patient_id': row.PatientID,
                     'patient_firstname': row.P_FirstName,
@@ -71,9 +74,10 @@ def send_cancellation_email(patient_email, doctor_name, appointment_date, slot_t
 
 
 
-#API Endpoint for Doctor to cancel patient Appointment
+#API Endpoint for admin to cancel patient Appointment
 @doctorManageAppointments_bp.route('/cancel_doctor_appointment/<int:appointment_id>', methods=['DELETE'])
 def cancel_doctor_appointment(appointment_id):
+    
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()

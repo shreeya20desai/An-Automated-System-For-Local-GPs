@@ -34,14 +34,16 @@ function StaffLogin() {
 
       if (response.ok) {
         localStorage.setItem("staffType", data.staffType);
-        //localStorage.setItem("staffId", data.staffId);
+        localStorage.setItem("staffId", data.staffId);
         if (data.staffType === "doctor") {
           localStorage.setItem("doctor_id", data.staffId);
+          localStorage.setItem("doctorName", data.name);
           setTimeout(() => {
             navigate("/StaffDashboard");
           }, 0);
         } else if (data.staffType === "nurse") {
           localStorage.setItem("nurse_id", data.staffId);
+          localStorage.setItem("nurseName", data.name);
           setTimeout(() => {
             navigate("/StaffDashboard");
           }, 0);

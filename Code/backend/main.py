@@ -5,6 +5,10 @@ from application.routes.staffRoutes.staffAuth import staffauth_bp
 from application.routes.staffRoutes.staffAvailability import staffAvailability_bp
 from application.routes.patientRoutes.patientBookingAppointment import patientBooking_bp
 from application.routes.staffRoutes.doctorManageAppointment import doctorManageAppointments_bp
+from application.routes.staffRoutes.doctorPrescription import doctorPrescriptions_bp
+from application.routes.patientRoutes.patientPrescription import prescription_bp
+from application.routes.staffRoutes.adminRoutes import adminRoutes_bp
+
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
@@ -37,10 +41,13 @@ jwt = JWTManager(app)
 
 
 app.register_blueprint(auth_bp, url_prefix='/gp')
+app.register_blueprint(adminRoutes_bp, url_prefix='/gp')
 app.register_blueprint(staffauth_bp, url_prefix='/gp')
 app.register_blueprint(staffAvailability_bp, url_prefix='/gp')
 app.register_blueprint(patientBooking_bp, url_prefix='/gp')
 app.register_blueprint(doctorManageAppointments_bp, url_prefix='/gp')
+app.register_blueprint(doctorPrescriptions_bp, url_prefix='/gp')
+app.register_blueprint(prescription_bp, url_prefix='/gp')
 
 
 CORS(app, supports_credentials=True, resources={

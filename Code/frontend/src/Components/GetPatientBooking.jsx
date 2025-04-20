@@ -18,7 +18,7 @@ const GetPatientBooking = () => {
     // The date format 'yyyy-mm-dd' inorder to match the backend API.
     const formattedDate = date.toLocaleDateString("en-CA");
 
-    // API call for get patient booking for specific date
+    // API call to get patient booking for specific date
     fetch(`${BASE_URL}/get_patient_bookings/${formattedDate}`)
       .then((response) => {
         if (!response.ok) {
@@ -40,7 +40,7 @@ const GetPatientBooking = () => {
     <div className="container my-4">
       <div className="d-flex justify-content-between mb-3 align-items-center">
         <div className="input-group date-picker-wrapper">
-          {/* Inorder to select a date date picker is been used*/}
+          {/* Inorder to select a particluar date date picker is been used*/}
           <DatePicker
             selected={selectedDate}
             onChange={handleDateChange}
@@ -79,6 +79,7 @@ const GetPatientBooking = () => {
                     <tr>
                       <th>Appointment ID</th>
                       <th>Patient Name</th>
+                      <th>Disease Type</th>
                       <th>Start Time</th>
                       <th>End Time</th>
                     </tr>
@@ -91,6 +92,7 @@ const GetPatientBooking = () => {
                           {appointment.patient_firstname}{" "}
                           {appointment.patient_lastname}
                         </td>
+                        <td>{appointment.disease_name}</td>
                         <td>{appointment.start_time}</td>
                         <td>{appointment.end_time}</td>
                       </tr>

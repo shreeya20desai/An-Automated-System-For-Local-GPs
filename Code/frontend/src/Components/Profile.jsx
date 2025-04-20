@@ -34,6 +34,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // APi logic for patient profile
     const fetchPatientProfile = async () => {
       try {
         const response = await fetch(`${BASE_URL}/patientProfile`, {
