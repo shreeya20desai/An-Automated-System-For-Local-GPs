@@ -3,8 +3,9 @@ import { Card, Form, Button, Row, Col, Table } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import SetAvailabilityModal from "../Components/SetAvailabilityModal";
-import { format, addMonths, subDays } from "date-fns";
+import { format, addMonths } from "date-fns";
 import { BASE_URL } from "../../src/config";
+import { startOfMonth, endOfMonth } from "date-fns";
 
 const SetStaffAvailability = () => {
   const [dates, setDates] = useState([new Date()]);
@@ -34,6 +35,10 @@ const SetStaffAvailability = () => {
       setError("Staff type not found. Please log in again.");
     }
   }, []);
+
+  const today = new Date();
+  const minDate = startOfMonth(addMonths(today, 2)); // First day of two months ahead
+  const maxDate = endOfMonth(addMonths(today, 3));
 
   const timeSlots = []; //Initialzied an Empty Array of TimeSlot
   for (
@@ -258,15 +263,7 @@ const SetStaffAvailability = () => {
     }
 
     const itemToRemove = availability[index];
-    const itemDateObj = new Date(itemToRemove.date);
-    if (!isCancelable(itemDateObj)) {
-      setError(
-        "Availability can only be cancelled two weeks or more in advance. Kindly Contact the Admin"
-      );
-      return;
-    }
-
-    setError("");
+    // API call to delete the availability set by Doctor/Nurse
     const formattedDate = itemToRemove.date;
     const slotIndex = timeSlots.indexOf(itemToRemove.timeSlot);
     const slotIdToRemove = slotIndex + 1;
@@ -284,7 +281,6 @@ const SetStaffAvailability = () => {
       return;
     }
 
-    // API call to delete the availability set by Doctor/Nurse
     try {
       const response = await fetch(endpoint, {
         method: "DELETE",
@@ -337,6 +333,18 @@ const SetStaffAvailability = () => {
               <Row>
                 <Col md={12} className="mb-3">
                   <Form.Label style={{ fontWeight: "bold" }}>Dates</Form.Label>
+                  {/* <DatePicker
+                    selected={dates}
+                    onChange={handleDateChange}
+                    dateFormat="dd/MM/yyyy"
+                    filterDate={(date) =>
+                      isWithinBookingRange(date) && isNotOneDayBefore(date)
+                    }
+                    minDate={minDate}
+                    maxDate={maxDate}
+                    className="form-control"
+                    isMulti
+                  /> */}
                   <DatePicker
                     selected={dates}
                     onChange={handleDateChange}
@@ -344,8 +352,8 @@ const SetStaffAvailability = () => {
                     filterDate={(date) =>
                       isWithinBookingRange(date) && isNotOneDayBefore(date)
                     }
-                    minDate={subDays(addMonths(new Date(), -2), 1)} //  past dates cannot be selectable
-                    maxDate={addMonths(new Date(), 2)}
+                    minDate={minDate}
+                    maxDate={maxDate}
                     className="form-control"
                     isMulti
                   />

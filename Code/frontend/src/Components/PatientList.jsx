@@ -16,9 +16,12 @@ const PatientList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [patientToDelete, setPatientToDelete] = useState(null);
 
   useEffect(() => {
     const fetchPatients = async () => {
+      //API call to get the patients to display
       try {
         const response = await fetch(`${BASE_URL}/getPatients`, {
           method: "GET",
@@ -45,7 +48,7 @@ const PatientList = () => {
     fetchPatients();
   }, []);
 
-  // Patients are been filtered based on First name and email id.
+  // Filters the patient based on the name, email & phone
   const filteredPatients = patients.filter(
     (patient) =>
       (patient.P_FirstName &&
@@ -54,13 +57,52 @@ const PatientList = () => {
         patient.Email_Id.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  //  Details are been shown of selected patient (Modal Toggle)
   const handleShowDetails = (patient) => {
     setSelectedPatient(patient);
   };
 
   const handleCloseDetails = () => {
     setSelectedPatient(null);
+  };
+
+  const handleRemovePatient = (patient) => {
+    setPatientToDelete(patient);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDeletePatient = async () => {
+    if (!patientToDelete) return;
+
+    try {
+      // API call to delete patient
+      const response = await fetch(
+        `${BASE_URL}/deletePatient?email=${patientToDelete.Email_Id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        setPatients(
+          patients.filter((p) => p.Email_Id !== patientToDelete.Email_Id)
+        );
+        alert(
+          `Patient with email ${patientToDelete.Email_Id} has been removed.`
+        );
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Error removing patient");
+      }
+    } catch (err) {
+      setError("An error occurred while removing the patient");
+    } finally {
+      setShowConfirmModal(false);
+      setPatientToDelete(null);
+    }
   };
 
   return (
@@ -71,7 +113,6 @@ const PatientList = () => {
         </Col>
       </Row>
 
-      {/* Search by name or email */}
       <Row className="mb-4">
         <Col md={6}>
           <Form.Control
@@ -93,7 +134,6 @@ const PatientList = () => {
         </Row>
       )}
 
-      {/* Spinner loading */}
       {loading && !error && (
         <Row className="mb-3">
           <Col>
@@ -104,16 +144,16 @@ const PatientList = () => {
         </Row>
       )}
 
-      {/* Scrollable list of patients */}
       <div
         style={{
-          maxHeight: "400px", // maxi height of the of scrollable area
-          overflowY: "auto", // vertical scrolling
+          maxHeight: "400px",
+          overflowY: "auto",
         }}
       >
         <Table striped bordered hover responsive>
           <thead>
             <tr>
+              <th>ID</th>
               <th>Name</th>
               <th>Email</th>
               <th>Gender</th>
@@ -126,6 +166,7 @@ const PatientList = () => {
             {filteredPatients.length > 0 ? (
               filteredPatients.map((patient, index) => (
                 <tr key={index}>
+                  <td>{patient.P_id}</td>
                   <td>
                     {patient.P_FirstName} {patient.P_LastName}
                   </td>
@@ -136,15 +177,24 @@ const PatientList = () => {
                       ? new Date(patient.DOB).toISOString().slice(0, 10)
                       : ""}
                   </td>
-
                   <td className="d-none d-md-table-cell">{patient.Phone_No}</td>
                   <td>
-                    <Button
-                      variant="info"
-                      onClick={() => handleShowDetails(patient)}
-                    >
-                      View Details
-                    </Button>
+                    <div className="d-flex gap-2 flex-wrap">
+                      <Button
+                        variant="info"
+                        size="sm"
+                        onClick={() => handleShowDetails(patient)}
+                      >
+                        View Details
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => handleRemovePatient(patient)}
+                      >
+                        Remove
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -159,7 +209,7 @@ const PatientList = () => {
         </Table>
       </div>
 
-      {/* Patient details (Modal) */}
+      {/* Patient Details Modal */}
       {selectedPatient && (
         <Modal show={true} onHide={handleCloseDetails}>
           <Modal.Header closeButton>
@@ -182,7 +232,6 @@ const PatientList = () => {
                 ? new Date(selectedPatient.DOB).toISOString().slice(0, 10)
                 : ""}
             </p>
-
             <p>
               <strong>Phone Number:</strong> {selectedPatient.Phone_No}
             </p>
@@ -198,6 +247,35 @@ const PatientList = () => {
           </Modal.Footer>
         </Modal>
       )}
+
+      {/* Modal: Confirm delete*/}
+      <Modal
+        show={showConfirmModal}
+        onHide={() => setShowConfirmModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to remove the patient{" "}
+          <strong>
+            {patientToDelete?.P_FirstName} {patientToDelete?.P_LastName}
+          </strong>{" "}
+          with email <strong>{patientToDelete?.Email_Id}</strong>?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowConfirmModal(false)}
+          >
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={confirmDeletePatient}>
+            Yes, Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

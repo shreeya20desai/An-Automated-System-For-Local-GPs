@@ -61,10 +61,6 @@ const FeverPage = () => {
           <Card.Subtitle className="mb-2 ">
             If incase any major issues. Kindly see a GP.
           </Card.Subtitle>
-
-          <Button as={Link} to="/dashboard" variant="danger">
-            Book Appointment
-          </Button>
         </Card.Body>
       </Card>
     </Container>

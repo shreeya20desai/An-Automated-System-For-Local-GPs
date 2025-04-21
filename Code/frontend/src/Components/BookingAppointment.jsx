@@ -8,10 +8,11 @@ import { BASE_URL } from "../config";
 
 const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
   const navigate = useNavigate();
-  // Step 1: Displays the form to select the type of diseases.
+
+  //  Step 1: Displays the form to select the type of diseases.
   // Step 2: Displays the calendar for the patients.
-  // Step 3: Displays the doctors available at that day.
-  // Step 4: Displays the time slots available for that specific doctor.
+  //  Step 3: Displays the doctors available at that day.
+  //  Step 4: Displays the time slots available for that specific doctor.
   const [step, setStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState(null);
   const [availableDoctors, setAvailableDoctors] = useState([]);
@@ -19,6 +20,8 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
   const [selectedProblem, setSelectedProblem] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [problems, setProblems] = useState([]);
+  const [diseaseDescription, setDiseaseDescription] = useState("");
+  const [patientId, setPatientId] = useState(null);
 
   useEffect(() => {
     // API call to get the all the diseases.
@@ -28,7 +31,6 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Convert backend keys to frontend camelCase
         const mapped = data.map((item) => ({
           disease_id: item.Disease_ID,
           disease_name: item.Disease_Name,
@@ -43,10 +45,10 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    setStep(2); // Step 2: Displays the calendar
+    setStep(2); //Step 2: Displays the calendar
   };
 
-  //The date is been formatted.
+  //The date is been formatted(YYYY-MM-DD)
   const formatDate = (date) => {
     const year = date.getFullYear();
     const month = `0${date.getMonth() + 1}`.slice(-2);
@@ -106,8 +108,8 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
   };
 
   const handleBookDoctor = (timeSlot) => {
-    // Retrieve patient_id from localStorage
-    const patientId = localStorage.getItem("patient_id"); // Makes sures that the patient ID is stored in localStorage
+    let patientId = localStorage.getItem("patient_id"); // Makes sures that the patient ID is stored in localStorage
+
     if (!patientId) {
       console.error("Patient ID not found in localStorage");
       return;
@@ -125,7 +127,7 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
 
     // Creates the patient info required for book appointment using the patient ID.
     const patientInfo = {
-      id: patientId, // patient ID from localStorage
+      id: patientId,
       selectedProblem,
     };
 
@@ -138,11 +140,11 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
       },
       body: JSON.stringify({
         doctor_id: doctor.id,
-        patient_id: patientInfo.id,
+        patient_id: patientInfo.id || patientId,
         date: formatDate(selectedDate),
         slot_id: timeSlot.id,
         disease_type: selectedProblem,
-        disease_description: "",
+        disease_description: diseaseDescription,
       }),
     })
       .then((response) => response.json())
@@ -161,72 +163,15 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
     onHide();
     setTimeout(() => navigate(path), 0);
   };
-  // const navigateToInfoPage = (path) => {
-  //   onHide();
-  //   setTimeout(() => navigate(path), 0);
-  // };
-  // const [selectedDoctor, setSelectedDoctor] = useState(null);
-  // //dummy vales
-  // useEffect(() => {
-  //   setName("John Doe");
-  //   setEmail("john.doe@example.com");
-  // }, []);
-
-  // const handleFormSubmit = (event) => {
-  //   event.preventDefault();
-  //   setStep(2);
-  // };
-
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  //   //dummy vales
-  //   const doctors = [
-  //     {
-  //       doctor_id: 101,
-  //       doctor_name: "Dr. Smith",
-  //       specialization: "Cardiology",
-  //     },
-  //     {
-  //       doctor_id: 102,
-  //       doctor_name: "Dr. Jones",
-  //       specialization: "Dermatology",
-  //     },
-  //   ];
-
-  //   setAvailableDoctors(doctors);
-  //   setStep(3);
-  // };
-
-  // const handleDoctorSelect = (doctor) => {
-  //   setSelectedDoctor(doctor);
-  //   //dummy time slots
-  //   const timeSlots = [
-  //     { availability_id: 201, time_slot: "10:00 AM" },
-  //     { availability_id: 202, time_slot: "11:00 AM" },
-  //     { availability_id: 203, time_slot: "01:00 PM" },
-  //   ];
-  //   setAvailableTimeSlots(timeSlots);
-  //   setStep(4);
-  // };
-
-  // //handle booking the selecetd doctor
-  // const handleBookDoctor = () => {
-  //   console.log(
-  //     `Booking doctor ${selectedDoctor.doctor_name} on ${selectedDate} at ${selectedTime}`
-  //   );
-  //   onBookingComplete();
-  // };
 
   return (
     <Modal show={show} onHide={onHide}>
-      {/* CloseButton  */}
       <Modal.Header closeButton>
         <Modal.Title style={{ textAlign: "center" }}>
           Booking Appointment Details
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {/* {!showCalendar && !showDoctors && !showTimeSlots && ( */}
         {step === 1 && (
           //imported component BookingAppointmentForm
           <BookingAppointmentForm
@@ -234,7 +179,10 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
             selectedProblem={selectedProblem}
             setSelectedProblem={setSelectedProblem}
             problemOptions={problems}
+            diseaseDescription={diseaseDescription}
+            setDiseaseDescription={setDiseaseDescription}
             navigateToInfoPage={navigateToInfoPage}
+            setPatientId={setPatientId}
           />
         )}
 
@@ -252,14 +200,11 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
         )}
 
         {/* On the date selected , display a list of doctors avaiable */}
-        {/* {showDoctors && (
-          <div> */}
         {step === 3 && (
           <>
             <h3>Available Doctors on {selectedDate.toDateString()}</h3>
             <ul className="list-group">
-              {Array.isArray(availableDoctors) &&
-              availableDoctors.length > 0 ? (
+              {availableDoctors.length > 0 ? (
                 availableDoctors.map((doctor) => (
                   <li
                     key={doctor.id}
@@ -294,8 +239,6 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
         )}
 
         {/* Display the doctors availability(time slots), which helps the user to book the appointment */}
-        {/* {showTimeSlots && (
-          <div> */}
         {step === 4 && (
           <>
             <h3>Available Time slots</h3>

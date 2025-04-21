@@ -221,7 +221,7 @@ def getPatientsList():
         try:
             cursor = conn.cursor()
 
-            cursor.execute("""SELECT P_FirstName,P_LastName,Gender,DOB,Email_Id,Phone_No,StreetAddress,City,Postcode FROM Patient """, )
+            cursor.execute("""SELECT P_id,P_FirstName,P_LastName,Gender,DOB,Email_Id,Phone_No,StreetAddress,City,Postcode FROM Patient """, )
             #Returns a list of tuples
             patient_List = cursor.fetchall()
             if not patient_List:
@@ -345,3 +345,83 @@ def get_nurses():
     finally:
         conn.close()
 
+
+#API endpoint to Delete Patient
+@adminRoutes_bp.route('/deletePatient', methods=['DELETE'])
+@jwt_required()
+def delete_patient():
+    admin_email = get_jwt_identity()
+
+    if verify_staff(admin_email) != 'admin':
+        return jsonify({'message': 'Admin level rights required'}), 403
+
+    email = request.args.get('email')
+    if not email:
+        return jsonify({'message': 'Missing patient email'}), 400
+
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM Patient WHERE Email_Id =?", (email,))
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'Patient not found'}), 404
+        conn.commit()
+        return jsonify({'message': f'Patient with email {email} deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'message': f'Error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+
+#API endpoint to Delete Doctor
+@adminRoutes_bp.route('/deleteDoctor', methods=['DELETE'])
+@jwt_required()
+def delete_doctor():
+    admin_email = get_jwt_identity()
+
+    if verify_staff(admin_email) != 'admin':
+        return jsonify({'message': 'Admin level rights required'}), 403
+
+    email = request.args.get('email')
+    if not email:
+        return jsonify({'message': 'Missing doctor email'}), 400
+
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM Doctor WHERE Doctor_Email = ?", (email,))
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'Doctor not found'}), 404
+        conn.commit()
+        return jsonify({'message': f'Doctor with email {email} deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'message': f'Error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+
+#API endpoint to delete Nurse
+@adminRoutes_bp.route('/deleteNurse', methods=['DELETE'])
+@jwt_required()
+def delete_nurse():
+    admin_email = get_jwt_identity()
+
+    if verify_staff(admin_email) != 'admin':
+        return jsonify({'message': 'Admin level rights required'}), 403
+
+    email = request.args.get('email')
+    if not email:
+        return jsonify({'message': 'Missing nurse email'}), 400
+
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM Nurse WHERE Nurse_Email = ?", (email,))
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'Nurse not found'}), 404
+        conn.commit()
+        return jsonify({'message': f'Nurse with email {email} deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'message': f'Error: {str(e)}'}), 500
+    finally:
+        conn.close()

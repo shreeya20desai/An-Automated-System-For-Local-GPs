@@ -8,6 +8,8 @@ import {
   Card,
   Spinner,
   Alert,
+  Modal,
+  Button,
 } from "react-bootstrap";
 import { BASE_URL } from "../config";
 
@@ -17,11 +19,13 @@ const StaffList = () => {
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(null);
 
   useEffect(() => {
     const fetchStaff = async () => {
       if (!selectedRole) {
-        setStaff([]); //when no role is selected it ckear staff.
+        setStaff([]);
         return;
       }
 
@@ -34,6 +38,7 @@ const StaffList = () => {
           : `${BASE_URL}/getNurses`;
 
       try {
+        //API call to get the patient list
         const response = await fetch(endpoint, {
           method: "GET",
           headers: {
@@ -59,7 +64,7 @@ const StaffList = () => {
     fetchStaff();
   }, [selectedRole]);
 
-  // Filters the person based on the name , email & phone
+  // Filters the person based on the name, email & phone
   const filteredStaff = staff.filter((person) => {
     const lowerSearch = searchTerm.toLowerCase();
     return (
@@ -74,6 +79,46 @@ const StaffList = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [selectedRole]);
+
+  // Handle the confirm remove action
+  const confirmRemove = (person) => {
+    setSelectedPerson(person);
+    setShowConfirmModal(true);
+  };
+
+  const handleDeleteConfirmed = async () => {
+    if (!selectedPerson) return;
+
+    const endpoint =
+      selectedRole === "Doctor"
+        ? `${BASE_URL}/deleteDoctor?email=${selectedPerson.Email}`
+        : `${BASE_URL}/deleteNurse?email=${selectedPerson.Email}`;
+
+    try {
+      //API endpoint to delete the staff
+      const response = await fetch(endpoint, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const updatedStaff = staff.filter(
+          (s) => s.Email !== selectedPerson.Email
+        );
+        setStaff(updatedStaff);
+        setShowConfirmModal(false);
+        setSelectedPerson(null);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Error deleting staff");
+      }
+    } catch (err) {
+      setError("An error occurred while deleting staff");
+    }
+  };
 
   return (
     <Container fluid className="py-4 px-3">
@@ -133,6 +178,7 @@ const StaffList = () => {
                         <th className="d-none d-lg-table-cell">
                           Specialization
                         </th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -150,11 +196,19 @@ const StaffList = () => {
                                 ? `Specialization ${person.Specialization}`
                                 : "N/A"}
                             </td>
+                            <td>
+                              <button
+                                className="btn btn-sm btn-danger"
+                                onClick={() => confirmRemove(person)}
+                              >
+                                Remove
+                              </button>
+                            </td>
                           </tr>
                         ))
                       ) : (
                         <tr>
-                          <td colSpan="5" className="text-center">
+                          <td colSpan="6" className="text-center">
                             No staff found.
                           </td>
                         </tr>
@@ -177,6 +231,32 @@ const StaffList = () => {
           </Col>
         </Row>
       )}
+
+      {/* Delete Modal*/}
+      <Modal
+        show={showConfirmModal}
+        onHide={() => setShowConfirmModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete{" "}
+          <strong>{selectedPerson?.Name}</strong>?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowConfirmModal(false)}
+          >
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirmed}>
+            Yes, Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

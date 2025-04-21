@@ -41,7 +41,7 @@ def register_patient():
         try:
             cursor = conn.cursor()
 
-            # Checks if the patient alreday exists.
+            # Checks if the patient already exists.
             cursor.execute("""
                 SELECT 1 FROM Patient WHERE Email_Id = ? OR Phone_No = ?
             """, (email, phone))

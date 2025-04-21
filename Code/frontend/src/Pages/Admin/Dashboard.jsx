@@ -6,6 +6,8 @@ import AddPatientForm from "../../Components/AddPatient";
 import AddStaffForm from "../../Components/AddStaff";
 import PatientList from "../../Components/PatientList";
 import StaffList from "../../Components/StaffList";
+import BookAppointmentButton from "../../Components/BookAppointmentButton";
+import BookingAppointment from "../../Components/BookingAppointment";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -13,6 +15,8 @@ const AdminDashboard = () => {
   const [showAddStaffForm, setShowAddStaffForm] = useState(false);
   const [showPatientList, setShowPatientList] = useState(false);
   const [showStaffList, setShowStaffList] = useState(false);
+  const [showAppointmentContent, setShowAppointmentContent] = useState(false);
+  const [showBookingForm, setShowBookingForm] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -20,6 +24,14 @@ const AdminDashboard = () => {
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const handleBookAppointmentClick = () => {
+    setShowBookingForm(true);
+  };
+
+  const handleBookingComplete = () => {
+    setShowBookingForm(false);
   };
 
   const navbarLinks = [
@@ -32,6 +44,8 @@ const AdminDashboard = () => {
         setShowAddPatientForm(true);
         setShowPatientList(false);
         setShowStaffList(false);
+        setShowAppointmentContent(false);
+        setShowBookingForm(false);
       },
     },
     {
@@ -43,6 +57,8 @@ const AdminDashboard = () => {
         setShowAddPatientForm(false);
         setShowPatientList(false);
         setShowStaffList(false);
+        setShowAppointmentContent(false);
+        setShowBookingForm(false);
       },
     },
     {
@@ -54,19 +70,21 @@ const AdminDashboard = () => {
         setShowAddPatientForm(false);
         setShowPatientList(false);
         setShowStaffList(false);
+        setShowAppointmentContent(true);
+        setShowBookingForm(false);
       },
     },
-    {
-      id: "setAvailability",
-      originalName: "Appointment_Bookings",
-      displayName: "Set Availability",
-      onClick: () => {
-        setShowAddStaffForm(false);
-        setShowAddPatientForm(false);
-        setShowPatientList(false);
-        setShowStaffList(false);
-      },
-    },
+    // {
+    //   id: "setAvailability",
+    //   originalName: "Appointment_Bookings",
+    //   displayName: "Set Availability",
+    //   onClick: () => {
+    //     setShowAddStaffForm(false);
+    //     setShowAddPatientForm(false);
+    //     setShowPatientList(false);
+    //     setShowStaffList(false);
+    //   },
+    // },
     {
       id: "setAvailability",
       originalName: "Profile",
@@ -76,6 +94,8 @@ const AdminDashboard = () => {
         setShowAddPatientForm(false);
         setShowPatientList(true);
         setShowStaffList(false);
+        setShowAppointmentContent(false);
+        setShowBookingForm(false);
       },
     },
     {
@@ -87,6 +107,8 @@ const AdminDashboard = () => {
         setShowAddPatientForm(false);
         setShowPatientList(false);
         setShowStaffList(true);
+        setShowAppointmentContent(false);
+        setShowBookingForm(false);
       },
     },
   ];
@@ -147,6 +169,31 @@ const AdminDashboard = () => {
               lg={{ span: 10, offset: 2 }}
             >
               <StaffList />
+            </Col>
+          </Row>
+        )}
+        {showAppointmentContent && (
+          <Row>
+            {!showBookingForm && (
+              <Col
+                xs={12}
+                md={{ span: 9, offset: 3 }}
+                lg={{ span: 10, offset: 2 }}
+              >
+                <BookAppointmentButton onClick={handleBookAppointmentClick} />
+              </Col>
+            )}
+
+            <Col
+              xs={12}
+              md={{ span: 9, offset: 3 }}
+              lg={{ span: 10, offset: 2 }}
+            >
+              <BookingAppointment
+                show={showBookingForm}
+                onHide={() => setShowBookingForm(false)}
+                onBookingComplete={handleBookingComplete}
+              />
             </Col>
           </Row>
         )}
