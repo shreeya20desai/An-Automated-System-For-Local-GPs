@@ -246,15 +246,15 @@ def getPatientsList():
 
 # Endpoint for Get Doctors
 @adminRoutes_bp.route('/getDoctors', methods=['GET'])
-@jwt_required()
+#@jwt_required()
 def get_doctors():
-    admin_email = get_jwt_identity()
+    # admin_email = get_jwt_identity()
 
-    if not admin_email:
-        return jsonify({'message': 'Missing admin email in token'}), 400
+    # if not admin_email:
+    #     return jsonify({'message': 'Missing admin email in token'}), 400
 
-    if verify_staff(admin_email) != 'admin':
-        return jsonify({'message': 'Admin level rights required'}), 403
+    # if verify_staff(admin_email) != 'admin':
+    #     return jsonify({'message': 'Admin level rights required'}), 403
 
     conn = get_db_connection()
     if not conn:

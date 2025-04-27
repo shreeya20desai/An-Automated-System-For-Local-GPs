@@ -7,9 +7,8 @@ import Register from '../src/Pages/Register/Register.jsx'
 import Dashboard from './Pages/Patient/Dashboard/Dashboard.jsx';
 import StaffDashboard from './Pages/Staff/Dashboard.jsx';
 import AdminDashboard from './Pages/Admin/Dashboard.jsx'
-import CoughPage from './Components/Cough.jsx';
-import FeverPage from './Components/Fever.jsx';
-import Abdonimalpain from './Components/Abdominalpain.jsx';
+import PaymentSuccess from './Components/PaymentSuccess';
+import PaymentCancel from './Components/PaymentCancel';
 
 
 function App() {
@@ -23,9 +22,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/StaffDashboard" element={<StaffDashboard />} />
         <Route path="/AdminDashboard" element={<AdminDashboard />} />
-        <Route path="/CoughPage" element={<CoughPage />} />
-        <Route path="/FeverPage" element={<FeverPage />} />
-        <Route path="/Abdonimalpage" element={<Abdonimalpain />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-cancel" element={<PaymentCancel />} />
 
 
       </Routes>

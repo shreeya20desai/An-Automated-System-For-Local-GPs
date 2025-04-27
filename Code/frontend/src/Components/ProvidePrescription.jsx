@@ -19,6 +19,8 @@ function ProvidePrescription() {
   const [medications, setMedications] = useState([]);
   const [patientType, setPatientType] = useState("");
   const [collectionMethod, setCollectionMethod] = useState("");
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [prescriptionId, setPrescriptionId] = useState(null);
 
   const [formInputs, setFormInputs] = useState({
     firstName: "",
@@ -79,9 +81,40 @@ function ProvidePrescription() {
     }
   };
 
+  const handlePrescriptionSent = (prescriptionId) => {
+    setPrescriptionId(prescriptionId);
+    setStep(4);
+  };
+
+  const resetToStepOne = () => {
+    setStep(1);
+    setPatient(null);
+    setVerificationError("");
+    setMedications([]);
+    setPatientType("");
+    setCollectionMethod("");
+    setFormInputs({
+      firstName: "",
+      lastName: "",
+      dob: "",
+    });
+    setPrescriptionId(null);
+    setShowSuccessAlert(false);
+  };
+
   return (
     <Container className="mt-4">
       <Card className="p-4 shadow">
+        {step === 4 && prescriptionId && (
+          <Alert variant="success" className="mb-3">
+            Prescription sent to pharmacy! Prescription ID: {prescriptionId}
+            <div className="d-flex justify-content-end">
+              <Button onClick={resetToStepOne} className="ml-2">
+                OK
+              </Button>
+            </div>
+          </Alert>
+        )}
         {step === 1 && (
           <>
             <h4>Verify Patient</h4>
@@ -173,6 +206,7 @@ function ProvidePrescription() {
             medications={medications}
             patientType={patientType}
             collectionMethod={collectionMethod}
+            onPrescriptionComplete={handlePrescriptionSent}
           />
         )}
       </Card>

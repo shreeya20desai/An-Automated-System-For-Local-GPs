@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CancelAppointmentButton from "./CancelAppointmentButton";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaCalendarAlt } from "react-icons/fa";
@@ -34,6 +35,11 @@ const GetPatientBooking = () => {
         setError(err.message);
         setLoading(false);
       });
+  };
+
+  // Handles the cancel appointment
+  const handleCancelAppointment = (appointmentId) => {
+    console.log(`Cancelling appointment with ID: ${appointmentId}`);
   };
 
   return (
@@ -95,6 +101,13 @@ const GetPatientBooking = () => {
                         <td>{appointment.disease_name}</td>
                         <td>{appointment.start_time}</td>
                         <td>{appointment.end_time}</td>
+                        {/* Cancel appointment button imported from the component */}
+                        <td>
+                          <CancelAppointmentButton
+                            onCancel={handleCancelAppointment}
+                            rowId={appointment.appointment_id}
+                          />
+                        </td>
                       </tr>
                     ))}
                   </tbody>

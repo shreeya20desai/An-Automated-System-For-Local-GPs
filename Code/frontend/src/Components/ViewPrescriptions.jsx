@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, Table } from "react-bootstrap";
+import { Container, Card, Table, Button } from "react-bootstrap";
+import PaymentAlreadyDoneModal from "./PaymentAlreadyDoneModal";
 import { BASE_URL } from "../config";
+import { loadStripe } from "@stripe/stripe-js";
 
-function PatientDashboard() {
+// Publishable key (From the Stripe dashboard)
+const stripePromise = loadStripe(
+  "pk_test_51RGHcUBVGfGb5W2wShdqPPEa03fhPvlfsCdoewGMVZ8jGVjUtPYrqpjBgNCOXa7caOEw4Qd0SQoP5yuyjvkTR9OM00GjDn9wNB"
+);
+
+function ViewPrescriptions() {
   const [prescriptions, setPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [paymentError, setPaymentError] = useState(null);
+  const [showPaymentDoneModal, setShowPaymentDoneModal] = useState(false);
   const currentPatientId = localStorage.getItem("patient_id");
 
   useEffect(() => {
     const fetchPrescriptions = async () => {
+      // API endpoint to fetch the prescription
       try {
         const response = await fetch(
           `${BASE_URL}/prescriptions?patientId=${currentPatientId}`,
@@ -35,6 +45,59 @@ function PatientDashboard() {
     fetchPrescriptions();
   }, [currentPatientId]);
 
+  const handlePayNow = async (totalCost, prescriptionID) => {
+    // API endpoint to create the payment session
+    try {
+      const response = await fetch(`${BASE_URL}/create-payment-session`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: totalCost * 100, // Stripe expects amount in cents
+          patientId: currentPatientId,
+          prescription_id: prescriptionID,
+        }),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (
+          errorData &&
+          errorData.error === "Payment already completed for this prescription"
+        ) {
+          // PaymentAlreadyDoneModal
+          setShowPaymentDoneModal(true);
+          return;
+        }
+        throw new Error(
+          `Failed to create payment intent: ${
+            errorData.error || response.statusText
+          }`
+        );
+      }
+      const { sessionId } = await response.json();
+      console.log("Session ID:", sessionId);
+
+      const stripe = await stripePromise;
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: sessionId,
+      });
+
+      if (error) {
+        console.error("Error redirecting to Stripe Checkout:", error);
+        setPaymentError(
+          "Failed to redirect to payment gateway. Please try again."
+        );
+      }
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+      setPaymentError(`Failed to initiate payment: ${error.message}`);
+    }
+  };
+
+  // If the prescriptions are loading
   if (loading) {
     return (
       <Container className="mt-5">
@@ -43,12 +106,13 @@ function PatientDashboard() {
     );
   }
 
+  // If incase there arent any prescriptions provided
   if (prescriptions.length === 0) {
     return (
       <Container className="mt-5">
         <Card className="p-4 text-center">
           <h4>No Prescriptions Found</h4>
-          <p>It seems you don't have any prescriptions yet.</p>
+          <p>Seems you don't have any prescriptions yet.</p>
         </Card>
       </Container>
     );
@@ -68,6 +132,7 @@ function PatientDashboard() {
           }}
         >
           {prescriptions.map((prescription, index) => (
+            // Prescription Header
             <Card key={index} className="mb-3 p-2 border-0 bg-light">
               <Card.Header className="text-truncate bg-white fw-semibold">
                 Prescribed on{" "}
@@ -75,12 +140,27 @@ function PatientDashboard() {
                 {prescription.doctorEmail}
               </Card.Header>
 
+              {/* Prescription Body */}
               <Card.Body>
                 <p className="mb-2">
                   <strong>Pharmacy:</strong> {prescription.pharmacyName} <br />
                   <strong>Collection Method:</strong>{" "}
                   {prescription.collectionMethod} <br />
                   <strong>Total Cost:</strong> £{prescription.totalCost}
+                  {/* Pay now Button */}
+                  <Button
+                    variant="success"
+                    size="sm"
+                    className="ms-2"
+                    onClick={() =>
+                      handlePayNow(
+                        prescription.totalCost,
+                        prescription.prescriptionid
+                      )
+                    }
+                  >
+                    Pay Now (£{prescription.totalCost})
+                  </Button>
                 </p>
 
                 {/* Desktop Table */}
@@ -126,14 +206,33 @@ function PatientDashboard() {
                       </Card.Body>
                     </Card>
                   ))}
+                  <div className="d-grid mt-2">
+                    <Button
+                      variant="success"
+                      onClick={() =>
+                        handlePayNow(
+                          prescription.totalCost,
+                          prescription.prescriptionid
+                        )
+                      }
+                    >
+                      Pay Now (£{prescription.totalCost})
+                    </Button>
+                  </div>
                 </div>
               </Card.Body>
             </Card>
           ))}
         </div>
       </Card>
+
+      {/* Payment already done modal */}
+      <PaymentAlreadyDoneModal
+        show={showPaymentDoneModal}
+        onClose={() => setShowPaymentDoneModal(false)}
+      />
     </Container>
   );
 }
 
-export default PatientDashboard;
+export default ViewPrescriptions;

@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Form, Row, Col, Button, ListGroup } from "react-bootstrap";
+import { Form, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config";
 
-function PharmacyForm({ goBack, medications, patientType, collectionMethod }) {
+function PharmacyForm({
+  goBack,
+  medications,
+  patientType,
+  collectionMethod,
+  onPrescriptionComplete,
+}) {
   const [pharmacy, setPharmacy] = useState({
     name: "",
     street: "",
@@ -89,10 +95,11 @@ function PharmacyForm({ goBack, medications, patientType, collectionMethod }) {
 
       if (response.ok) {
         const result = await response.json();
-        alert(
-          `Prescription sent to pharmacy! Prescription ID: ${result.prescriptionid}`
-        );
-        // navigate("/nextPage"); // Navigate to the next page if needed
+
+        onPrescriptionComplete(result.prescriptionid);
+        // alert(
+        //   `Prescription sent to pharmacy! Prescription ID: ${result.prescriptionid}`
+        // );
       } else {
         const err = await response.json();
         setError(
@@ -102,6 +109,7 @@ function PharmacyForm({ goBack, medications, patientType, collectionMethod }) {
     } catch (error) {
       setError("An error occurred while sending the prescription.");
       console.error("Error:", error);
+      alert(error);
     }
   };
   return (

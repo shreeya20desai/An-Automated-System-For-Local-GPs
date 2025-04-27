@@ -7,6 +7,7 @@ from application.routes.patientRoutes.patientBookingAppointment import patientBo
 from application.routes.staffRoutes.doctorManageAppointment import doctorManageAppointments_bp
 from application.routes.staffRoutes.doctorPrescription import doctorPrescriptions_bp
 from application.routes.patientRoutes.patientPrescription import prescription_bp
+from application.routes.patientRoutes.buyPrescriptions import buyPrescriptions_bp
 from application.routes.staffRoutes.adminRoutes import adminRoutes_bp
 
 from flask_cors import CORS
@@ -42,6 +43,7 @@ jwt = JWTManager(app)
 
 app.register_blueprint(auth_bp, url_prefix='/gp')
 app.register_blueprint(adminRoutes_bp, url_prefix='/gp')
+app.register_blueprint(buyPrescriptions_bp, url_prefix='/gp')
 app.register_blueprint(staffauth_bp, url_prefix='/gp')
 app.register_blueprint(staffAvailability_bp, url_prefix='/gp')
 app.register_blueprint(patientBooking_bp, url_prefix='/gp')

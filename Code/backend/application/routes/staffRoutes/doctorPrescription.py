@@ -30,7 +30,7 @@ container = database.get_container_client(CONTAINER_NAME)
 
 
 
-
+#API endpoint to get the medicines
 @doctorPrescriptions_bp.route('/medicines', methods=['GET'])
 @jwt_required()
 def get_medicines():
