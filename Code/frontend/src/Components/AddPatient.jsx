@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Card, Form, Button, Row, Col } from "react-bootstrap";
+import { Card, Form, Button, Row, Col, Alert } from "react-bootstrap";
 import { BASE_URL } from "../config";
+import { getCookie } from "../utils";
 
 const AddPatientForm = ({ adminEmail, adminId }) => {
   const [patientFirstName, setFirstName] = useState("");
@@ -13,6 +14,9 @@ const AddPatientForm = ({ adminEmail, adminId }) => {
   const [gender, setGender] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
   const [city, setCity] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertVariant, setAlertVariant] = useState("");
+
   const [postcode, setPostcode] = useState("");
 
   const handleSubmit = async (e) => {
@@ -25,10 +29,13 @@ const AddPatientForm = ({ adminEmail, adminId }) => {
 
     // API call for admin registering New patients from admin dashboard
     try {
+      const csrfToken = getCookie("csrf_access_token");
+      console.log("CSRF Header:", getCookie("csrf_access_token"));
       const response = await fetch(`${BASE_URL}/gp-patient/registration`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
         },
         credentials: "include",
         body: JSON.stringify({
@@ -47,7 +54,9 @@ const AddPatientForm = ({ adminEmail, adminId }) => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Patient added successfully!");
+        // alert("Patient added successfully!");
+        setAlertMessage("Patient added successfully!");
+        setAlertVariant("success");
         // Reset form
         setFirstName("");
         setLastName("");
@@ -61,28 +70,31 @@ const AddPatientForm = ({ adminEmail, adminId }) => {
         setCity("");
         setPostcode("");
       } else {
-        console.error(
-          "Error registering patient:",
-          data.message || "Unknown error occurred."
-        );
-        alert(
-          `Error registering patient: ${
-            data.message || "Unknown error occurred."
-          }`
-        );
+        setAlertMessage(`Error adding Patient: ${data.message}`);
+        setAlertVariant("danger");
       }
-    } catch (networkErr) {
-      console.error("Network error:", networkErr);
-      alert("Network error. Please try again.");
+    } catch (error) {
+      console.error("Network error:", error);
+      setAlertMessage("Network error. Please try again.");
+      setAlertVariant("danger");
     }
   };
-
   return (
     <Row className="justify-content-md-center mt-5">
       <Col xs={12} md={8} lg={6}>
         <Card style={{ height: "500px" }}>
           <Card.Header style={{ textAlign: "center" }}>Add Patient</Card.Header>
           <Card.Body style={{ overflowY: "auto", height: "calc(100% - 50px)" }}>
+            {alertMessage && (
+              <Alert
+                variant={alertVariant}
+                onClose={() => setAlertMessage("")}
+                dismissible
+              >
+                {alertMessage}
+              </Alert>
+            )}
+
             <Form onSubmit={handleSubmit}>
               {/* First and Last name */}
               <Row>

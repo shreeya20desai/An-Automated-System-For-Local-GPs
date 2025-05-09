@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Card, Form, Button, Row, Col } from "react-bootstrap";
+import { Card, Form, Button, Row, Col, Alert } from "react-bootstrap";
+
 import { BASE_URL } from "../config";
 
 const AddStaffForm = () => {
@@ -12,16 +13,26 @@ const AddStaffForm = () => {
   const [staffRegistrationNumber, setStaffRegistrationNumber] = useState("");
   const [staffType, setStaffType] = useState("");
   const [specializations, setSpecializations] = useState([]);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertVariant, setAlertVariant] = useState("");
+
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  }
 
   const fetchSpecializations = async (staffType) => {
     //API Call to get the specializations for the staff based on their type i.e Nurse/Doctor.
     try {
+      const csrfToken = getCookie("csrf_access_token");
       const response = await fetch(
         `${BASE_URL}/get_specializations?staff_type=${staffType}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
           },
           credentials: "include",
         }
@@ -48,10 +59,12 @@ const AddStaffForm = () => {
     e.preventDefault();
     //API call for admin to register staff
     try {
+      const csrfToken = getCookie("csrf_access_token");
       const response = await fetch(`${BASE_URL}/staff/registration`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
         },
         credentials: "include",
         body: JSON.stringify({
@@ -69,8 +82,10 @@ const AddStaffForm = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Staff added successfully:", data);
-        alert("Staff added successfully!");
+        // console.log("Staff added successfully:", data);
+        // alert("Staff added successfully!");
+        setAlertMessage("Staff added successfully!");
+        setAlertVariant("success");
         // Reset form
         setFirstName("");
         setLastName("");
@@ -81,12 +96,17 @@ const AddStaffForm = () => {
         setStaffType("");
         setStaffRegistrationNumber("");
       } else {
-        console.error("Error adding staff:", data.message);
-        alert(`Error adding staff: ${data.message}`);
+        // console.error("Error adding staff:", data.message);
+        // alert(`Error adding staff: ${data.message}`);
+        setAlertMessage(`Error adding staff: ${data.message}`);
+        setAlertVariant("danger");
       }
     } catch (error) {
+      // console.error("Network error:", error);
+      // alert("Network error. Please try again.");
       console.error("Network error:", error);
-      alert("Network error. Please try again.");
+      setAlertMessage("Network error. Please try again.");
+      setAlertVariant("danger");
     }
   };
 
@@ -96,6 +116,15 @@ const AddStaffForm = () => {
         <Card>
           <Card.Header style={{ textAlign: "center" }}>Add Staff</Card.Header>
           <Card.Body>
+            {alertMessage && (
+              <Alert
+                variant={alertVariant}
+                onClose={() => setAlertMessage("")}
+                dismissible
+              >
+                {alertMessage}
+              </Alert>
+            )}
             <Form onSubmit={handleSubmit}>
               {/* First name and last name */}
               <Row>

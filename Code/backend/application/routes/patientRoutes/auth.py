@@ -3,7 +3,9 @@ from application.utils.db_helpers import get_db_connection
 import hashlib
 import os
 from datetime import timedelta
+from azure.storage.blob import BlobServiceClient, PublicAccess
 import jwt
+import uuid
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, set_access_cookies, set_refresh_cookies, unset_jwt_cookies
 
 auth_bp = Blueprint('auth', __name__)
@@ -15,6 +17,24 @@ JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
 # Utility functions
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
+
+# Utility function to change access level of containers after patinet is registered
+def change_container_access(container_name, public_access_level):
+    try:
+        container_client = blob_service_client.get_container_client(container_name)
+        container_client.set_container_access_policy(public_access=public_access_level,signed_identifiers={})
+        print(f"Successfully changed public access for container '{container_name}' to '{public_access_level}'.")
+        return True
+    except Exception as e:
+        print(f"Error changing public access for container '{container_name}': {e}")
+        return False
+    
+
+# Connection string for the Azure Blob Storage
+CONNECTION_STRING = os.getenv('CONNECTION_STRING')
+blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
+
+
 
 
 
@@ -33,6 +53,7 @@ def register_patient():
     city = data.get('city')  
     postcode = data.get('postcode')  
 
+    
     if not all([p_first_name, p_last_name, dob, gender, email, phone, password,street_address,city,postcode]):
         return jsonify({'message': 'Missing required fields'}), 400
 
@@ -52,11 +73,23 @@ def register_patient():
 
             hashed_password = hash_password(password)
 
+            unique_id = uuid.uuid4().hex[:8] # here a unique ID is been created of first 8 digits only
+            container_name = f"patient-{p_first_name.lower()}{p_last_name.lower()}{dob.replace('-', '')}-{unique_id}"
+
             cursor.execute("""
-                INSERT INTO Patient (P_FirstName, P_LastName, Gender, DOB, Email_Id, Phone_No, PatientPassword, StreetAddress, City, Postcode)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (p_first_name, p_last_name, gender, dob, email, phone, hashed_password, street_address, city, postcode))
+                INSERT INTO Patient (P_FirstName, P_LastName, Gender, DOB, Email_Id, Phone_No, PatientPassword,StreetAddress,City,Postcode,container_name)
+                VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?)
+            """, (p_first_name, p_last_name, gender, dob, email, phone, hashed_password,street_address,city,postcode,container_name))
             conn.commit()
+
+          
+            try:
+                blob_service_client.create_container(container_name)
+                change_container_access(container_name, PublicAccess.BLOB)
+                print(f"Container '{container_name}'created sucessfully ")
+            except Exception as e:
+                print(f"Container '{container_name}'creation failed, :'{e}' ")
+
             return jsonify({'message': 'Patient registered successfully'}), 201
 
         except Exception as e:
@@ -64,8 +97,7 @@ def register_patient():
         finally:
             conn.close()
     else:
-        return jsonify({'message': 'Database connection failed'}), 500
-
+        return jsonify({'message': 'Database connectionfailed'}),500
 
 
 
@@ -115,6 +147,7 @@ def patient_login():
 
             # Setting refresh cookie to deal with browser refresh
             set_refresh_cookies(response, refresh_token)
+         
 
             return response
 

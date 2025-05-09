@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import TopNavbar from "../../../Components/TopNavBar";
 import LeftNavbar from "../../../Components/LeftNavBar";
 import AppointmentCard from "../../../Components/AppointmentCard";
@@ -7,6 +7,8 @@ import BookAppointmentButton from "../../../Components/BookAppointmentButton";
 import BookingAppointment from "../../../Components/BookingAppointment";
 import ViewPrescriptions from "../../../Components/ViewPrescriptions";
 import Profile from "../../../Components/Profile";
+import UploadMedicalHistory from "../../../Components/UploadMedicalHistory";
+import { getCookie } from "../../../utils";
 import { BASE_URL } from "../../../config";
 
 const Dashboard = () => {
@@ -15,6 +17,8 @@ const Dashboard = () => {
   const [showAppointmentContent, setShowAppointmentContent] = useState(true);
   const [showProfile, setProfile] = useState(false);
   const [showPrescriptions, setShowPrescriptions] = useState(false);
+  const [showMedicalHistoryUpload, setShowMedicalHistoryUpload] =
+    useState(false);
 
   //headers for the table, appointments table
   const [appointmentData, setAppointmentData] = useState({
@@ -29,8 +33,13 @@ const Dashboard = () => {
     setLoading(true);
     setError(null);
     try {
+      const csrfToken = getCookie("csrf_access_token");
       const response = await fetch(`${BASE_URL}/my_appointments`, {
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
+        },
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -61,17 +70,6 @@ const Dashboard = () => {
     fetchAppointments();
   }, []);
 
-  //dummy data
-  /* const [appointmentData, setAppointmentData] = useState({
-      headers: ["APP ID", "Date", "Time", "Status"],
-      rows: [
-        { id: "001", data: ["001", "2022-10-10", "10:00 AM", "Scheduled"] },
-        { id: "002", data: ["002", "2022-10-11", "11:30 AM", "Completed"] },
-      ],
-    });
-
-    */
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -83,11 +81,17 @@ const Dashboard = () => {
   const handleCancelAppointment = async (appointmentId) => {
     // API call for cancel appointment
     try {
+      const csrfToken = getCookie("csrf_access_token");
       const response = await fetch(
         `${BASE_URL}/cancel_appointment/${appointmentId}`,
         {
           method: "DELETE",
           credentials: "include",
+
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+          },
         }
       );
 
@@ -127,6 +131,7 @@ const Dashboard = () => {
         setShowBookingForm(false);
         setProfile(false);
         setShowPrescriptions(false);
+        setShowMedicalHistoryUpload(false);
       },
     },
     {
@@ -138,6 +143,7 @@ const Dashboard = () => {
         setShowBookingForm(false);
         setProfile(false);
         setShowPrescriptions(true);
+        setShowMedicalHistoryUpload(false);
       },
     },
 
@@ -145,7 +151,13 @@ const Dashboard = () => {
       id: "records",
       originalName: "Medical Records",
       displayName: "Medical Records",
-      href: "#PatientData",
+      onClick: () => {
+        setShowAppointmentContent(false);
+        setShowBookingForm(false);
+        setShowPrescriptions(false);
+        setProfile(false);
+        setShowMedicalHistoryUpload(true);
+      },
     },
     {
       id: "profile",
@@ -156,6 +168,7 @@ const Dashboard = () => {
         setShowBookingForm(false);
         setShowPrescriptions(false);
         setProfile(true);
+        setShowMedicalHistoryUpload(false);
       },
     },
   ];
@@ -211,6 +224,7 @@ const Dashboard = () => {
 
             {showProfile && <Profile />}
             {showPrescriptions && <ViewPrescriptions />}
+            {showMedicalHistoryUpload && <UploadMedicalHistory />}
           </Col>
         </Row>
       </Container>

@@ -19,6 +19,7 @@ def get_db_connection():
         username = os.getenv("SQL_USERNAME")
         password = os.getenv("SQL_PASSWORD")
         driver = os.getenv("SQL_DRIVER", "{ODBC Driver 17 for SQL Server}") 
+        
 
         if not all([server, database, username, password, driver]):
             print("Missing one or more SQL Server environment variables.")
@@ -32,7 +33,12 @@ def get_db_connection():
     except pyodbc.Error as ex:
         sqlstate = ex.args[0]
         print(f"SQL Server connection error: {sqlstate}")
-        return None
+        print(f"Full error details: {ex}")
+        raise  
+
+
+
+
 
 
 get_db_connection()

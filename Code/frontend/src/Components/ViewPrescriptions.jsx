@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Card, Table, Button } from "react-bootstrap";
 import PaymentAlreadyDoneModal from "./PaymentAlreadyDoneModal";
 import { BASE_URL } from "../config";
+import { getCookie } from "../utils";
 import { loadStripe } from "@stripe/stripe-js";
 
 // Publishable key (From the Stripe dashboard)
@@ -20,11 +21,16 @@ function ViewPrescriptions() {
     const fetchPrescriptions = async () => {
       // API endpoint to fetch the prescription
       try {
+        const csrfToken = getCookie("csrf_access_token");
         const response = await fetch(
           `${BASE_URL}/prescriptions?patientId=${currentPatientId}`,
           {
             method: "GET",
             credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": csrfToken,
+            },
           }
         );
 
@@ -48,10 +54,12 @@ function ViewPrescriptions() {
   const handlePayNow = async (totalCost, prescriptionID) => {
     // API endpoint to create the payment session
     try {
+      const csrfToken = getCookie("csrf_access_token");
       const response = await fetch(`${BASE_URL}/create-payment-session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
         },
         body: JSON.stringify({
           amount: totalCost * 100, // Stripe expects amount in cents

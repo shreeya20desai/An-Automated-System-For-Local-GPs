@@ -8,6 +8,7 @@ import {
   Modal,
   Button,
 } from "react-bootstrap";
+import { getCookie } from "../utils";
 import { BASE_URL } from "../config";
 
 const PatientList = () => {
@@ -23,10 +24,13 @@ const PatientList = () => {
     const fetchPatients = async () => {
       //API call to get the patients to display
       try {
+        const csrfToken = getCookie("csrf_access_token");
+
         const response = await fetch(`${BASE_URL}/getPatients`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
           },
           credentials: "include",
         });
@@ -74,6 +78,8 @@ const PatientList = () => {
     if (!patientToDelete) return;
 
     try {
+      const csrfToken = getCookie("csrf_access_token");
+
       // API call to delete patient
       const response = await fetch(
         `${BASE_URL}/deletePatient?email=${patientToDelete.Email_Id}`,
@@ -81,6 +87,7 @@ const PatientList = () => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
           },
           credentials: "include",
         }

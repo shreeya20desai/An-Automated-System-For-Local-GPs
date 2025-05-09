@@ -7,7 +7,7 @@ import {
   FaUser,
 } from "react-icons/fa";
 
-const LeftNavbar = ({ isOpen, onClose, links }) => {
+const LeftNavbar = ({ isOpen, onClose, links, staffType }) => {
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -65,10 +65,23 @@ const LeftNavbar = ({ isOpen, onClose, links }) => {
           links.map((link) => (
             <Nav.Link
               key={link.id}
-              className="mt-4 mb-2"
+              className={`mt-4 mb-2 ${
+                staffType === "nurse" && link.disabled
+                  ? "opacity-50 pe-none" //pe-none (pointer is been disabled)
+                  : ""
+              }`}
               href={link.href}
-              onClick={link.onClick}
+              onClick={
+                link.disabled && staffType === "nurse"
+                  ? (e) => e.preventDefault()
+                  : link.onClick
+              }
               style={{ color: "white" }}
+              disabled={staffType === "nurse" && link.disabled}
+              //informs the reader if the element is disabled.
+              aria-disabled={
+                staffType === "nurse" && link.disabled ? "true" : undefined
+              }
             >
               {icons[link.originalName]} {link.displayName}
             </Nav.Link>

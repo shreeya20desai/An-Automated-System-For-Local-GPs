@@ -15,7 +15,7 @@ def insert_admin():
             # This two lines are used to set default admin email and password
             # SHA256 secure hash algorithm
             admin_password = hashlib.sha256('shree'.encode()).hexdigest()  
-            admin_email = 'Uol.admin@healme.com'
+            admin_email = 'Uol.admin@thehealme.com'
 
             # Check if the  admin already exists
             cursor.execute("SELECT 1 FROM Admin WHERE Admin_Email = ?", (admin_email,))
@@ -25,7 +25,7 @@ def insert_admin():
                 # Insert the admin details into the database
                 cursor.execute("""
                     INSERT INTO Admin (Admin_Password, Admin_Email)
-                    VALUES (?, ?)3
+                    VALUES (?, ?)
                 """, ( admin_password, admin_email))
                 conn.commit()
                 print("Admin Created successfully.")

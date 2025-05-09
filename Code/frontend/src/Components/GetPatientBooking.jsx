@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import CancelAppointmentButton from "./CancelAppointmentButton";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { FaCalendarAlt } from "react-icons/fa";
+import "react-datepicker/dist/react-datepicker.css";
+import { getCookie } from "../utils";
 import { BASE_URL } from "../config";
 
 const GetPatientBooking = () => {
@@ -10,6 +11,8 @@ const GetPatientBooking = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [cancelLoading, setCancelLoading] = useState(null);
+  const [cancelError, setCancelError] = useState(null);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -20,7 +23,15 @@ const GetPatientBooking = () => {
     const formattedDate = date.toLocaleDateString("en-CA");
 
     // API call to get patient booking for specific date
-    fetch(`${BASE_URL}/get_patient_bookings/${formattedDate}`)
+    const csrfToken = getCookie("csrf_access_token");
+    fetch(`${BASE_URL}/get_patient_bookings/${formattedDate}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": csrfToken,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch appointments");
@@ -39,7 +50,41 @@ const GetPatientBooking = () => {
 
   // Handles the cancel appointment
   const handleCancelAppointment = (appointmentId) => {
-    console.log(`Cancelling appointment with ID: ${appointmentId}`);
+    setCancelLoading(appointmentId);
+    setCancelError(null);
+
+    //API endpoint to cancel the appointmen t
+    const csrfToken = getCookie("csrf_access_token");
+    fetch(`${BASE_URL}/cancel_doctor_appointment/${appointmentId}`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": csrfToken,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to cancel appointment");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data.message);
+
+        // Upon cancellation, updates the appointments list
+        setAppointments((prevAppointments) =>
+          prevAppointments.filter(
+            (appointment) => appointment.appointment_id !== appointmentId
+          )
+        );
+        setCancelLoading(null);
+      })
+      .catch((err) => {
+        console.error("Error cancelling appointment:", err);
+        setCancelError(err.message);
+        setCancelLoading(null);
+      });
   };
 
   return (
@@ -106,6 +151,10 @@ const GetPatientBooking = () => {
                           <CancelAppointmentButton
                             onCancel={handleCancelAppointment}
                             rowId={appointment.appointment_id}
+                            loading={
+                              cancelLoading === appointment.appointment_id
+                            }
+                            error={cancelError}
                           />
                         </td>
                       </tr>

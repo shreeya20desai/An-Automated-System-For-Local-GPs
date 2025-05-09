@@ -5,14 +5,31 @@ import hashlib
 from flask_jwt_extended import jwt_required,get_jwt_identity
 import os
 import datetime
+import uuid
 import jwt
+from azure.storage.blob import BlobServiceClient, PublicAccess
+
 
 adminRoutes_bp = Blueprint('adminRoutes', __name__)
 
 JWT_SECRET = os.getenv('JWT_SECRET', 'GP_UK')
 JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
 
+# Connection string for the Azure Blob Storage
+CONNECTION_STRING = os.getenv('CONNECTION_STRING')
+blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
 
+# Utility function to change access level of containers after patinet is registered
+def change_container_access(container_name, public_access_level):
+    try:
+        container_client = blob_service_client.get_container_client(container_name)
+        container_client.set_container_access_policy(public_access=public_access_level,signed_identifiers={} )
+        print(f"Successfully changed public access for container '{container_name}' to '{public_access_level}'.")
+        return True
+    except Exception as e:
+        print(f"Error changing public access for container '{container_name}': {e}")
+        return False
+    
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
@@ -80,7 +97,7 @@ def register_nurse(conn, data, admin_id):
 #API Endpoint for staff Creation
 @adminRoutes_bp.route('/staff/registration',methods=['POST'])
 @jwt_required()
-def createStaffLogin():
+def createStaff():
     data = request.get_json()
     admin_Email = get_jwt_identity()
     staffType = data.get('staffType')
@@ -132,8 +149,7 @@ def createStaffLogin():
 
 
 
-
-    #API Endpoint for Patient Creation
+#API Endpoint for Patient Creation
 @adminRoutes_bp.route('/gp-patient/registration', methods=['POST'])
 @jwt_required()
 def create_gp_patient():
@@ -184,13 +200,24 @@ def create_gp_patient():
             except ValueError:
                 return jsonify({'message': 'Invalid date format. Please use YYYY-MM-DD'}), 400
 
+            unique_id = uuid.uuid4().hex[:8] # here a unique ID is been created of first 8 digits only
+            container_name = f"patient-{patient_first_name.lower()}{patient_last_name.lower()}{dob.replace('-', '')}-{unique_id}"
+
             cursor.execute("""
-                INSERT INTO Patient (P_FirstName, P_LastName, Gender, DOB, Email_Id, Phone_No, PatientPassword, Registered_By_Admin, StreetAddress, City, Postcode)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (patient_first_name, patient_last_name, gender, dob_date, patient_email, patient_phone, hashed_password, admin_id, street_address, city, postcode))
+                INSERT INTO Patient (P_FirstName, P_LastName, Gender, DOB, Email_Id, Phone_No, PatientPassword, Registered_By_Admin, StreetAddress, City, Postcode,container_name)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+            """, (patient_first_name, patient_last_name, gender, dob_date, patient_email, patient_phone, hashed_password, admin_id, street_address, city, postcode,container_name))
 
             conn.commit()
+            try:
+                blob_service_client.create_container(container_name)
+                change_container_access(container_name, PublicAccess.BLOB)
+                print(f"Container '{container_name}'created sucessfully ")
+            except Exception as e:
+                print(f"Container '{container_name}'creation failed, :'{e}' ")
+
             return jsonify({'message': 'Patient registered successfully'}), 201
+        
 
         except pyodbc.IntegrityError:
             return jsonify({'message': 'Patient with this email or phone number already exists'}), 400
@@ -246,15 +273,15 @@ def getPatientsList():
 
 # Endpoint for Get Doctors
 @adminRoutes_bp.route('/getDoctors', methods=['GET'])
-#@jwt_required()
-def get_doctors():
-    # admin_email = get_jwt_identity()
+@jwt_required()
+def get_doctorsList():
+    admin_email = get_jwt_identity()
 
-    # if not admin_email:
-    #     return jsonify({'message': 'Missing admin email in token'}), 400
+    if not admin_email:
+        return jsonify({'message': 'Missing admin email in token'}), 400
 
-    # if verify_staff(admin_email) != 'admin':
-    #     return jsonify({'message': 'Admin level rights required'}), 403
+    if verify_staff(admin_email) != 'admin':
+        return jsonify({'message': 'Admin level rights required'}), 403
 
     conn = get_db_connection()
     if not conn:
@@ -298,7 +325,7 @@ def get_doctors():
 # Endpoint for Get Nurses
 @adminRoutes_bp.route('/getNurses', methods=['GET'])
 @jwt_required()
-def get_nurses():
+def get_nursesList():
     admin_email = get_jwt_identity()
 
     if not admin_email:

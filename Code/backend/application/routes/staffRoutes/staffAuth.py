@@ -5,7 +5,7 @@ import hashlib
 import os
 import datetime
 import jwt
-from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, set_access_cookies, set_refresh_cookies, unset_jwt_cookies
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, set_access_cookies, set_refresh_cookies
 
 
 staffauth_bp = Blueprint('staffAuth', __name__)
@@ -146,13 +146,14 @@ def staff_login():
             'staffType': staff_type,
             'staffId': staff_id
             }))
-            print(f"Staff logged in with ID: {staff_id}")
+            
 
             # Setting accesss cookie to deal with protected route access 
             set_access_cookies(response, access_token)
 
             # Setting refresh cookie to deal with browser refresh
             set_refresh_cookies(response, refresh_token)
+   
 
             return response
 

@@ -11,6 +11,7 @@ import {
   Modal,
   Button,
 } from "react-bootstrap";
+import { getCookie } from "../utils";
 import { BASE_URL } from "../config";
 
 const StaffList = () => {
@@ -39,10 +40,12 @@ const StaffList = () => {
 
       try {
         //API call to get the patient list
+        const csrfToken = getCookie("csrf_access_token");
         const response = await fetch(endpoint, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
           },
           credentials: "include",
         });
@@ -95,11 +98,13 @@ const StaffList = () => {
         : `${BASE_URL}/deleteNurse?email=${selectedPerson.Email}`;
 
     try {
+      const csrfToken = getCookie("csrf_access_token");
       //API endpoint to delete the staff
       const response = await fetch(endpoint, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
         },
         credentials: "include",
       });

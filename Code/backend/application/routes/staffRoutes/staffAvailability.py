@@ -16,7 +16,7 @@ JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
 @staffAvailability_bp.route('/set_doctor_availability', methods=['POST'])
 @jwt_required()
 def set_doctor_availability():
-    print("Preflight OPTIONS Cookies:", request.cookies)
+
     try:
         data = request.get_json()
         doctor_id = data['doctor_id']
@@ -72,7 +72,6 @@ def cancel_doctor_availability(doctor_id, date, slot_id):
 
 
 
-
 #API Endpoint for Set Nurse Availability
 @staffAvailability_bp.route('/set_nurse_availability', methods=['POST'])
 @jwt_required()
@@ -125,6 +124,55 @@ def cancel_nurse_availability(nurse_id, date, slot_id):
                 return jsonify({'message': 'Nurse availability not found'}), 404
             conn.commit()
             return jsonify({'message': 'Nurse availability cancelled successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+
+
+# This api end point will return doctors/nurses availabilty based on staff type and staff id  
+@staffAvailability_bp.route('/get_availability/<string:staff_type>/<int:staff_id>', methods=['GET'])
+@jwt_required()
+def get_availability(staff_type, staff_id):
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+
+            if staff_type.lower() == "doctor":
+                cursor.execute("""
+                    SELECT Date, SlotID
+                    FROM DoctorAvailability
+                    WHERE DoctorID = ?
+                    ORDER BY Date, SlotID
+                """, staff_id)
+
+            elif staff_type.lower() == "nurse":
+                cursor.execute("""
+                    SELECT Date, SlotID
+                    FROM NurseAvailability
+                    WHERE NurseID = ?
+                    ORDER BY Date, SlotID
+                """, staff_id)
+
+            else:
+                return jsonify({'message': 'Invalid staff type'}), 400
+
+            rows = cursor.fetchall()
+
+            if not rows:
+                return jsonify([]), 200  
+            
+            
+            # Basically the below provided code is list comprehension which traverses through each row and extracts date and slot from it
+            availability = [
+                {
+                    'date': row.Date.strftime('%Y-%m-%d'),
+                    'slot_id': row.SlotID
+                }
+                for row in rows
+            ]
+
+            return jsonify(availability), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

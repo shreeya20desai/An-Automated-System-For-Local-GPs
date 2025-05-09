@@ -39,7 +39,7 @@ def get_medicines():
             cursor = conn.cursor()
             query = """
                 SELECT medicine_id, medicine_name, disease_id, dosage, form, manufacturer, side_effects, price
-                FROM GP.dbo.medicine
+                FROM medicine
             """
             cursor.execute(query,)
             columns = [column[0] for column in cursor.description]
@@ -69,7 +69,7 @@ def get_pharmacies():
             cursor = conn.cursor()
             query = """
                 SELECT pharmacy_id, name, street, city, postcode, contact_number, opening_time, closing_time
-                FROM GP.dbo.pharmacy
+                FROM pharmacy
             """
             cursor.execute(query)
             pharmacies_list = []
@@ -105,7 +105,7 @@ def search_patient():
             cursor = conn.cursor()
             query = """
                 SELECT P_id, P_FirstName, P_LastName, DOB, StreetAddress, City, Postcode
-                FROM GP.dbo.Patient
+                FROM Patient
                 WHERE P_FirstName = ? AND P_LastName = ? AND DOB = ?
             """
             cursor.execute(query, (first_name, last_name, dob))
@@ -155,7 +155,7 @@ def providePrescription():
             # Get patients first & last name + dob
             cursor.execute("""
                 SELECT P_FirstName, P_LastName
-                FROM GP.dbo.Patient
+                FROM Patient
                 WHERE P_id = ?
             """, (patientId,))
             row = cursor.fetchone()
@@ -163,7 +163,7 @@ def providePrescription():
                 return jsonify({'message': 'Patient Not Found'}), 400
 
             # Map medicine names to respective prices either student / normal from the  medicine table
-            cursor.execute("SELECT medicine_name, price, student_price FROM GP.dbo.Medicine")
+            cursor.execute("SELECT medicine_name, price, student_price FROM Medicine")
             medicine_price_map = {
                 name: {
                     'price': float(price),

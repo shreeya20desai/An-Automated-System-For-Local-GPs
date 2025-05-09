@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Button, Row, Col, Alert } from "react-bootstrap";
+import { getCookie } from "../utils";
 import { BASE_URL } from "../config";
 
 function PrescriptionForm({
@@ -19,10 +20,15 @@ function PrescriptionForm({
   useEffect(() => {
     const fetchMedicines = async () => {
       try {
+        const csrfToken = getCookie("csrf_access_token");
         // API call to fetch the medicines
         const response = await fetch(`${BASE_URL}/medicines`, {
           method: "GET",
           credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+          },
         });
 
         if (response.ok) {

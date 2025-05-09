@@ -1,3 +1,20 @@
-Flask
-pyodbc
-dotenv
+# Core framework
+flask==3.0.2
+flask-cors==4.0.1
+flask-jwt-extended==4.5.3
+
+# Database
+pyodbc==5.1.0
+python-dotenv==1.0.1
+
+# Azure SDKs
+azure-storage-blob==12.17.0
+azure-core==1.30.0
+azure-cosmos==4.6.0
+azure-communication-email==1.0.0
+
+# Payment
+stripe==8.0.0
+
+gunicorn
+

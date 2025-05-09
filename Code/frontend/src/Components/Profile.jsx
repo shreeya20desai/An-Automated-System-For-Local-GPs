@@ -8,25 +8,8 @@ import {
   Alert,
   Spinner,
 } from "react-bootstrap";
+import { getCookie } from "../utils";
 import { BASE_URL } from "../config";
-
-// const Profile = () => {
-//   const [firstName, setFirstName] = useState("");
-//   const [lastName, setLastName] = useState("");
-//   const [dob, setDob] = useState("");
-//   const [gender, setGender] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [phone, setPhone] = useState("");
-
-//   //Dummy Data
-//   useEffect(() => {
-//     setFirstName("John");
-//     setLastName("Doe");
-//     setDob("1990-01-01");
-//     setGender("Male");
-//     setEmail("john.doe@example.com");
-//     setPhone("123-456-7890");
-//   }, []);
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -37,9 +20,14 @@ const Profile = () => {
     // APi logic for patient profile
     const fetchPatientProfile = async () => {
       try {
+        const csrfToken = getCookie("csrf_access_token");
         const response = await fetch(`${BASE_URL}/patientProfile`, {
           method: "GET",
           credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+          },
         });
 
         const data = await response.json();

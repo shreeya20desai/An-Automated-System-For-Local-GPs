@@ -34,6 +34,8 @@ const AdminDashboard = () => {
     setShowBookingForm(false);
   };
 
+  //console.log(document.cookie);
+
   const navbarLinks = [
     {
       id: "addPatients",
@@ -74,17 +76,7 @@ const AdminDashboard = () => {
         setShowBookingForm(false);
       },
     },
-    // {
-    //   id: "setAvailability",
-    //   originalName: "Appointment_Bookings",
-    //   displayName: "Set Availability",
-    //   onClick: () => {
-    //     setShowAddStaffForm(false);
-    //     setShowAddPatientForm(false);
-    //     setShowPatientList(false);
-    //     setShowStaffList(false);
-    //   },
-    // },
+
     {
       id: "setAvailability",
       originalName: "Profile",

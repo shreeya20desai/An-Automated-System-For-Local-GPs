@@ -6,6 +6,7 @@ import SetDoctorAvailability from "../../Components/SetDoctorAvailability";
 import StaffProfile from "../../Components/StaffProfile";
 import GetPatientBooking from "../../Components/GetPatientBooking";
 import ProvidePrescription from "../../Components/ProvidePrescription";
+import ViewMedicalHistory from "../../Components/ViewMedicalHistory";
 
 const StaffDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -15,6 +16,7 @@ const StaffDashboard = () => {
   const [sidebarLinks, setSidebarLinks] = useState([]);
   const [showGetPatientBooking, setShowGetPatientBooking] = useState(false);
   const [showPrescription, setShowPrescription] = useState(false);
+  const [showViewMedicalHistory, setShowMedicalHistory] = useState(false);
 
   useEffect(() => {
     const storedStaffType = localStorage.getItem("staffType");
@@ -32,6 +34,7 @@ const StaffDashboard = () => {
           setShowProfile(false);
           setShowGetPatientBooking(false);
           setShowPrescription(false);
+          setShowMedicalHistory(false);
         },
       },
 
@@ -44,6 +47,7 @@ const StaffDashboard = () => {
           setShowProfile(false);
           setShowGetPatientBooking(true);
           setShowPrescription(false);
+          setShowMedicalHistory(false);
         },
       },
 
@@ -56,6 +60,7 @@ const StaffDashboard = () => {
           setShowProfile(false);
           setShowGetPatientBooking(false);
           setShowPrescription(true);
+          setShowMedicalHistory(false);
         },
       },
 
@@ -63,8 +68,15 @@ const StaffDashboard = () => {
         id: "records",
         originalName: "Medical Records",
         displayName: "Medical Records",
-        href: "#PatientData",
+        onClick: () => {
+          setShowSetAvailability(false);
+          setShowProfile(false);
+          setShowGetPatientBooking(false);
+          setShowPrescription(false);
+          setShowMedicalHistory(true);
+        },
       },
+
       {
         id: "profile",
         originalName: "Profile",
@@ -73,14 +85,19 @@ const StaffDashboard = () => {
           setShowSetAvailability(false);
           setShowProfile(true);
           setShowGetPatientBooking(false);
+          setShowMedicalHistory(false);
         },
       },
     ];
 
     if (storedStaffType === "nurse") {
-      // Nurse: Disabled the prescriptions.
+      // Nurse: Disabled the prescriptions ,records & getPatientBooking.
       const updatedLinks = initialLinks.map((link) =>
-        link.id === "prescriptions" ? { ...link, disabled: true } : link
+        link.id === "prescriptions" ||
+        link.id === "records" ||
+        link.id === "getPatientBooking"
+          ? { ...link, disabled: true }
+          : link
       );
       setSidebarLinks(updatedLinks);
     } else {
@@ -105,6 +122,7 @@ const StaffDashboard = () => {
         isOpen={isSidebarOpen}
         onClose={closeSidebar}
         links={sidebarLinks}
+        staffType={staffType} //if incase the stafftype is nurse wiould disable the prescription & medical recods.
       />
       <Container fluid style={{ paddingTop: "76px" }}>
         <Row>
@@ -113,6 +131,7 @@ const StaffDashboard = () => {
             {showProfile && <StaffProfile staffType={staffType} />}
             {showGetPatientBooking && <GetPatientBooking />}
             {showPrescription && <ProvidePrescription />}
+            {showViewMedicalHistory && <ViewMedicalHistory />}
           </Col>
         </Row>
       </Container>

@@ -1,4 +1,3 @@
-// components/PaymentCancel.js
 import React from "react";
 import { Container, Card, Alert, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";

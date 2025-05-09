@@ -33,7 +33,7 @@ def update_payment_status(stripe_checkout_session_id, status, prescription_id=No
             query = """
                 UPDATE payments
                 SET payment_status = ?, payment_date = ?
-                WHERE stripe_checkout_session_id = ?  
+                WHERE stripe_payment_intent_id = ?  
             """
             params = (status, datetime.datetime.utcnow(), stripe_checkout_session_id)
             execute_query(conn, query, params)
@@ -109,7 +109,7 @@ def create_payment():
         if conn:
             try:
                 query = """
-                    INSERT INTO payments (patient_id, prescription_id, stripe_checkout_session_id, amount, currency, payment_date, payment_status)
+                    INSERT INTO payments (patient_id, prescription_id,  stripe_payment_intent_id, amount, currency, payment_date, payment_status)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                 """
                 params = (patientId, prescription_id,  session.id, amount, currency, datetime.datetime.utcnow(), 'pending')
@@ -153,17 +153,17 @@ def stripe_webhook():
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
         prescription_id = session.get('client_reference_id')
-        stripe_checkout_session_id = session.get('id')
+        stripe_payment_intent_id = session.get('id')
 
-        print(f"Checkout Session for Prescription ID {prescription_id} completed! Session ID: {stripe_checkout_session_id}")
-        update_payment_status(stripe_checkout_session_id, 'succeeded', prescription_id)
+        print(f"Checkout Session for Prescription ID {prescription_id} completed! Session ID: {stripe_payment_intent_id}")
+        update_payment_status(stripe_payment_intent_id, 'succeeded', prescription_id)
 
     elif event['type'] == 'checkout.session.expired':
         session = event['data']['object']
         prescription_id = session.get('client_reference_id')
-        stripe_checkout_session_id = session.get('id')
-        print(f"Checkout Session for Prescription ID {prescription_id} expired! Session ID: {stripe_checkout_session_id}")
-        update_payment_status(stripe_checkout_session_id, 'expired', prescription_id)
+        stripe_payment_intent_id = session.get('id')
+        print(f"Checkout Session for Prescription ID {prescription_id} expired! Session ID: {stripe_payment_intent_id}")
+        update_payment_status(stripe_payment_intent_id, 'expired', prescription_id)
 
 
     return make_response('Webhook received', 200)

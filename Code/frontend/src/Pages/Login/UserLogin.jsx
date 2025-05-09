@@ -10,6 +10,7 @@ import StaffLoginButton from "../../Components/StaffLoginButton.jsx";
 import Image from "../../../src/Assets/Image1.png";
 import "./Login.css";
 import axios from "axios";
+import { getCookie } from "../../utils.js";
 import { BASE_URL } from "../../config.js";
 
 function UserLogin() {
@@ -21,8 +22,8 @@ function UserLogin() {
     setLoading(true);
     setLoginError(null);
 
-    //API call for patient login
     try {
+      // API endpoint for patient login
       const response = await axios.post(
         `${BASE_URL}/patient/login`,
         { email, password },
@@ -34,12 +35,19 @@ function UserLogin() {
         }
       );
 
-      if (response.status === 200) {
-        localStorage.setItem("patient_id", response.data.patient_id);
-        navigate("/dashboard");
-      } else {
-        setLoginError(response.data?.message || "Login failed");
-      }
+      const waitForCSRF = () => {
+        const csrfToken = getCookie("csrf_access_token");
+        if (csrfToken) {
+          // Locally stores patient ID
+          localStorage.setItem("patient_id", response.data.patient_id);
+          navigate("/dashboard");
+        } else {
+          console.log("Waiting for CSRF cookie...");
+          setTimeout(waitForCSRF, 100);
+        }
+      };
+
+      waitForCSRF();
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setLoginError("Invalid email or password.");

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { getCookie } from "../utils";
 import { BASE_URL } from "../config";
 
 function PharmacyForm({
@@ -24,12 +25,14 @@ function PharmacyForm({
 
   //API call to get the pharmcy details
   useEffect(() => {
+    const csrfToken = getCookie("csrf_access_token");
     const fetchPharmacies = async () => {
       try {
         const response = await fetch(`${BASE_URL}/pharmacies`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
           },
           credentials: "include",
         });
@@ -84,10 +87,12 @@ function PharmacyForm({
 
     //API call to provide the prescription
     try {
+      const csrfToken = getCookie("csrf_access_token");
       const response = await fetch(`${BASE_URL}/providePrescription`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
         },
         body: JSON.stringify(data),
         credentials: "include",

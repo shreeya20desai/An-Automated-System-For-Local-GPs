@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import SetAvailabilityModal from "../Components/SetAvailabilityModal";
 import { format, addMonths } from "date-fns";
 import { BASE_URL } from "../../src/config";
+import { getCookie } from "../utils";
 import { startOfMonth, endOfMonth } from "date-fns";
 
 const SetStaffAvailability = () => {
@@ -103,16 +104,72 @@ const SetStaffAvailability = () => {
     return selectedDate >= tomorrow;
   };
 
-  //Availability can only be cancelled two weeks or more in advance.
-  const isCancelable = (itemDate) => {
-    const today = new Date();
-    const twoWeeksAhead = new Date(today);
-    twoWeeksAhead.setDate(today.getDate() + 14);
-    twoWeeksAhead.setHours(0, 0, 0, 0);
-    const itemDateObj = new Date(itemDate);
-    itemDateObj.setHours(0, 0, 0, 0);
-    return itemDateObj > twoWeeksAhead;
+  // //Availability can only be cancelled two weeks or more in advance.
+  // const isCancelable = (itemDate) => {
+  //   const today = new Date();
+  //   const twoWeeksAhead = new Date(today);
+  //   twoWeeksAhead.setDate(today.getDate() + 14);
+  //   twoWeeksAhead.setHours(0, 0, 0, 0);
+  //   const itemDateObj = new Date(itemDate);
+  //   itemDateObj.setHours(0, 0, 0, 0);
+  //   return itemDateObj > twoWeeksAhead;
+  // };
+
+  const fetchAvailability = async (type, id) => {
+    if (!type || !id) return;
+    try {
+      const csrfToken = getCookie("csrf_access_token");
+      const response = await fetch(
+        `${BASE_URL}/get_availability/${type}/${id}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+          },
+        }
+      );
+      if (!response.ok) throw new Error("Failed to fetch availability.");
+      const data = await response.json();
+      const mapped = data.map((item) => {
+        const dateObj = new Date(item.date);
+        return {
+          date: item.date,
+          day: getDayName(dateObj),
+          timeSlot: timeSlots[item.slot_id - 1], // slot_id is 1-based
+        };
+      });
+      setAvailability(mapped);
+      setError("");
+    } catch (err) {
+      setError("Could not load availability.");
+      setAvailability([]);
+    }
   };
+
+  // On mount, load staff info and availability
+  useEffect(() => {
+    const storedStaffType = localStorage.getItem("staffType");
+    const storedDoctorId = localStorage.getItem("doctor_id");
+    const storedNurseId = localStorage.getItem("nurse_id");
+
+    if (storedStaffType) {
+      setStaffType(storedStaffType);
+      if (storedStaffType.toLowerCase() === "doctor" && storedDoctorId) {
+        setStaffId(storedDoctorId);
+        fetchAvailability("doctor", storedDoctorId);
+      } else if (storedStaffType.toLowerCase() === "nurse" && storedNurseId) {
+        setStaffId(storedNurseId);
+        fetchAvailability("nurse", storedNurseId);
+      } else {
+        setError("Staff ID not found. Please log in again.");
+      }
+    } else {
+      setError("Staff type not found. Please log in again.");
+    }
+    // eslint-disable-next-line
+  }, []);
 
   //Slot Selection
   const handleSlotSelection = (slot) => {
@@ -215,10 +272,12 @@ const SetStaffAvailability = () => {
       }
 
       try {
+        const csrfToken = getCookie("csrf_access_token");
         const response = await fetch(endpoint, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
           },
           body: JSON.stringify(payload),
           credentials: "include",
@@ -282,9 +341,14 @@ const SetStaffAvailability = () => {
     }
 
     try {
+      const csrfToken = getCookie("csrf_access_token");
       const response = await fetch(endpoint, {
         method: "DELETE",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
+        },
       });
 
       if (response.ok) {
@@ -333,18 +397,6 @@ const SetStaffAvailability = () => {
               <Row>
                 <Col md={12} className="mb-3">
                   <Form.Label style={{ fontWeight: "bold" }}>Dates</Form.Label>
-                  {/* <DatePicker
-                    selected={dates}
-                    onChange={handleDateChange}
-                    dateFormat="dd/MM/yyyy"
-                    filterDate={(date) =>
-                      isWithinBookingRange(date) && isNotOneDayBefore(date)
-                    }
-                    minDate={minDate}
-                    maxDate={maxDate}
-                    className="form-control"
-                    isMulti
-                  /> */}
                   <DatePicker
                     selected={dates}
                     onChange={handleDateChange}

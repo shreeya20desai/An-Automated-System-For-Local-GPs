@@ -8,27 +8,8 @@ import {
   Alert,
   Spinner,
 } from "react-bootstrap";
+import { getCookie } from "../utils";
 import { BASE_URL } from "../config";
-
-// const StaffProfile = ({ staffType }) => {
-//   const [staffFirstName, setStaffFirstName] = useState("");
-//   const [staffLastName, setStaffLastName] = useState("");
-//   const [staffEmail, setStaffEmail] = useState("");
-//   const [staffPhone, setStaffPhone] = useState("");
-//   const [staffRegistrationNumber, setStaffRegistrationNumber] = useState("");
-//   const [staffSpecialization, setStaffSpecialization] = useState("");
-
-//   useEffect(() => {
-//     // dummy data
-//     setStaffFirstName("Jane");
-//     setStaffLastName("Smith");
-//     setStaffEmail("jane.smith@example.com");
-//     setStaffPhone("987-654-3210");
-//     setStaffRegistrationNumber(staffType === "Doctor" ? "DR1234" : "NR67890");
-//     setStaffSpecialization(
-//       staffType === "Doctor" ? "Cardiology" : "Pediatrics"
-//     );
-//   }, [staffType]);
 
 const StaffProfile = () => {
   const [profile, setProfile] = useState(null);
@@ -36,11 +17,17 @@ const StaffProfile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // API endpoint to get the staffProfile
     const fetchProfile = async () => {
       try {
+        const csrfToken = getCookie("csrf_access_token");
         const response = await fetch(`${BASE_URL}/staffProfile`, {
           method: "GET",
           credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+          },
         });
 
         const data = await response.json();

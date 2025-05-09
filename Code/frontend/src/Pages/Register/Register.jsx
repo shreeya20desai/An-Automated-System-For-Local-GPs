@@ -5,6 +5,7 @@ import "../Login/Login.css";
 import Image from "../../Assets/Image1.png";
 import RegisterForm from "../../Components/RegisterForm";
 import { Link } from "react-router-dom";
+import { getCookie } from "../../utils";
 import { BASE_URL } from "../../config";
 
 const Register = () => {
@@ -14,11 +15,12 @@ const Register = () => {
   const handleRegister = async (registrationData) => {
     //API call for patient regsitration
     try {
-      console.log("Registration Data:", registrationData);
+      const csrfToken = getCookie("csrf_access_token");
       const response = await fetch(`${BASE_URL}/patient/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
         },
         body: JSON.stringify(registrationData),
       });

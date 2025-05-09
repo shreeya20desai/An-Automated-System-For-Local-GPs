@@ -1,8 +1,6 @@
 import React from "react";
-import { Container, Card, Button } from "react-bootstrap";
+import { Container, Card } from "react-bootstrap";
 import AbdominalPain from "../Assets/Abdominalpain.jpg";
-import { Link } from "react-router-dom";
-
 // https://my.clevelandclinic.org/health/symptoms/4167-abdominal-pain
 // https://www.nhs.uk/conditions/stomach-ache/
 

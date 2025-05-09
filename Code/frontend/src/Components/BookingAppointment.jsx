@@ -4,13 +4,14 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
 import BookingAppointmentForm from "./BookingAppointmentForm";
+import { getCookie } from "../utils";
 import { BASE_URL } from "../config";
 
 const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
   const navigate = useNavigate();
 
   //  Step 1: Displays the form to select the type of diseases.
-  // Step 2: Displays the calendar for the patients.
+  //  Step 2: Displays the calendar for the patients.
   //  Step 3: Displays the doctors available at that day.
   //  Step 4: Displays the time slots available for that specific doctor.
   const [step, setStep] = useState(1);
@@ -24,9 +25,14 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
   const [patientId, setPatientId] = useState(null);
 
   useEffect(() => {
+    const csrfToken = getCookie("csrf_access_token");
     // API call to get the all the diseases.
     fetch(`${BASE_URL}/get_diseases`, {
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": csrfToken,
+      },
       credentials: "include",
     })
       .then((response) => response.json())
@@ -60,11 +66,13 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
     setSelectedDate(date);
     // API call to get the list of doctors available for specific diseases.
     if (selectedProblem) {
+      const csrfToken = getCookie("csrf_access_token");
       fetch(`${BASE_URL}/get_doctors_list`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
         },
         body: JSON.stringify({
           health_issue: selectedProblem,
@@ -85,6 +93,7 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
   const handleDoctorSelect = (doctor) => {
     setSelectedDoctor(doctor);
     //API call to get the Specific doctor availability.
+    const csrfToken = getCookie("csrf_access_token");
     fetch(
       `${BASE_URL}/get_doctor_availability/${doctor.id}/${formatDate(
         selectedDate
@@ -94,6 +103,7 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
         },
       }
     )
@@ -132,11 +142,13 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
     };
 
     // API call to book the appointment for the patient.
+    const csrfToken = getCookie("csrf_access_token");
     fetch(`${BASE_URL}/book_appointment`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRF-TOKEN": csrfToken,
       },
       body: JSON.stringify({
         doctor_id: doctor.id,

@@ -11,6 +11,7 @@ import {
 import { BASE_URL } from "../config";
 import PharmacyForm from "./PharmacyForm";
 import PrescriptionForm from "./PrescriptionForm";
+import { getCookie } from "../utils";
 
 function ProvidePrescription() {
   const [step, setStep] = useState(1);
@@ -49,13 +50,17 @@ function ProvidePrescription() {
         last_name: lastName,
         dob,
       });
-
+      const csrfToken = getCookie("csrf_access_token");
       const response = await fetch(
         //API call to verify the patient
         `${BASE_URL}/patients/verify?${queryParams.toString()}`,
         {
           method: "GET",
           credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+          },
         }
       );
 

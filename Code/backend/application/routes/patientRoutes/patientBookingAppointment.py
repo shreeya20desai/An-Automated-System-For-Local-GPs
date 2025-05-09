@@ -96,9 +96,6 @@ def get_doctors_list():
         return jsonify({'error': str(e)}), 500
 
     
-
-
-
 #API endpoint to get the specific doctor availability
 @patientBooking_bp.route('/get_doctor_availability/<int:doctor_id>/<string:date>', methods=['GET'])
 @jwt_required()
