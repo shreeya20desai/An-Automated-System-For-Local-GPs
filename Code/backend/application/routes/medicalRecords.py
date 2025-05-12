@@ -20,25 +20,6 @@ blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING
 
 ALLOWED_RECORD_TYPES = ['X-ray', 'Reports', 'Prescriptions', 'Other']
 
-@medicalRecords_bp.route('/ping-db', methods=['GET'])
-def ping_db():
-    try:
-        conn = get_db_connection()
-        if conn:
-            conn.close()
-            return jsonify({"status": "success", "message": "Database connection successful"}), 200
-        else:
-            raise Exception("get_db_connection() returned None")
-
-    except Exception as e:
-        print(f" Ping DB Error: {e}")
-        return jsonify({
-            "status": "error",
-            "message": "Database connection failed",
-            "details": str(e)
-        }), 500
-
-
 
 #API endpoint to upload the docs.
 @medicalRecords_bp.route('/upload/<patient_id>', methods=['POST'])

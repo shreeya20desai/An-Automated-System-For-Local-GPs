@@ -109,7 +109,7 @@ def get_doctor_appointments_by_date(date):
            
             cursor.execute("""
                 SELECT d.Disease_Name, a.AppointmentID, a.PatientID, 
-                       p.P_FirstName, p.P_LastName, s.StartTime, s.EndTime
+                       p.P_FirstName, p.P_LastName, s.StartTime, s.EndTime,a.DiseaseDescription
                 FROM Appointment a
                 JOIN Patient p ON a.PatientID = p.P_id
                 JOIN Slots s ON a.SlotID = s.SlotID
@@ -127,7 +127,8 @@ def get_doctor_appointments_by_date(date):
                     'patient_firstname': row.P_FirstName,
                     'patient_lastname': row.P_LastName,
                     'start_time': row.StartTime.isoformat(),
-                    'end_time': row.EndTime.isoformat()
+                    'end_time': row.EndTime.isoformat(),
+                    'disease_description':row.DiseaseDescription
                 })
 
             return jsonify(appointments), 200

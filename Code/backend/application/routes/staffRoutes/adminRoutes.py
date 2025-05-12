@@ -231,7 +231,7 @@ def create_gp_patient():
 
 
 
-#API Endpoint for staff Creation
+#API Endpoint to get the patients list
 @adminRoutes_bp.route('/getPatients',methods=['GET'])
 @jwt_required()
 def getPatientsList():

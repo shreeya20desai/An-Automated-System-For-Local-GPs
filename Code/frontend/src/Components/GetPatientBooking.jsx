@@ -131,6 +131,7 @@ const GetPatientBooking = () => {
                       <th>Appointment ID</th>
                       <th>Patient Name</th>
                       <th>Disease Type</th>
+                      <th>Disease Description</th>
                       <th>Start Time</th>
                       <th>End Time</th>
                     </tr>
@@ -144,6 +145,7 @@ const GetPatientBooking = () => {
                           {appointment.patient_lastname}
                         </td>
                         <td>{appointment.disease_name}</td>
+                        <td>{appointment.disease_description}</td>
                         <td>{appointment.start_time}</td>
                         <td>{appointment.end_time}</td>
                         {/* Cancel appointment button imported from the component */}

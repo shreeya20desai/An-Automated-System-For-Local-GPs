@@ -29,7 +29,7 @@ def get_diseases():
             rows = cursor.fetchall()
 
             if not rows:
-                return jsonify({'message': 'No diseases found for this specialization.'}), 404
+                return jsonify({'message': 'No diseases found'}), 404
 
             diseases = []
             for row in rows:

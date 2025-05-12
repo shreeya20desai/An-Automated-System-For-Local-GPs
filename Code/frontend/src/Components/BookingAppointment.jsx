@@ -82,7 +82,7 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
         .then((response) => response.json())
         .then((data) => {
           setAvailableDoctors(data);
-          setStep(3); //Proceed Step 3: Doctor List.
+          setStep(3); // Step 3: Doctor List.
         })
         .catch((error) => {
           console.error("Error fetching doctors:", error);
@@ -110,7 +110,7 @@ const BookingAppointment = ({ show, onHide, onBookingComplete }) => {
       .then((response) => response.json())
       .then((data) => {
         setAvailableTimeSlots(data);
-        setStep(4); // Proceed Step 4: Time Slot
+        setStep(4); //  Step 4: Time Slot
       })
       .catch((error) => {
         console.error("Error fetching time slots:", error);

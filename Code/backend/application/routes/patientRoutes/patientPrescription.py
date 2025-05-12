@@ -14,30 +14,10 @@ COSMOS_KEY = os.environ.get("COSMOS_KEY")
 DATABASE_NAME = os.environ.get("DATABASE_NAME")
 CONTAINER_NAME = os.environ.get("CONTAINER_NAME")
 
-# Setting up Cosmos DB emulator
+# Setting up Cosmos DB emulator/ azure Cosmos Db
 client = cosmos_client.CosmosClient(COSMOS_ENDPOINT, {'masterKey': COSMOS_KEY})
 database = client.get_database_client(DATABASE_NAME)
 container = database.get_container_client(CONTAINER_NAME)
-
-# Helper function to get list of medicines within the prescription
-def get_prescription_medicines(prescription_id, cursor):
-    cursor.execute("""
-        SELECT mp.MedicineName, m.TypicalDosage, m.TypicalQuantity, mp.RefillsAllowed, m.MedicineName AS CatalogMedicineName
-        FROM MedicineProvided mp
-        LEFT JOIN Medicines m ON mp.CatalogMedicineID = m.MedicineID
-        WHERE mp.Prescription_ID = ?
-    """, prescription_id)
-    medicines_data = cursor.fetchall()
-    medicines = []
-    for row in medicines_data:
-        medicines.append({
-            'medicine_name': row.MedicineName,
-            'dosage': row.TypicalDosage,
-            'quantity': row.TypicalQuantity,
-            'refills_allowed': row.RefillsAllowed,
-            'catalog_medicine_name': row.CatalogMedicineName
-        })
-    return medicines
 
 
 #API Endpoint to Get the prescriptions

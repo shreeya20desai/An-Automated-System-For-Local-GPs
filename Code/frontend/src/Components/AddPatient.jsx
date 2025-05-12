@@ -16,7 +16,6 @@ const AddPatientForm = ({ adminEmail, adminId }) => {
   const [city, setCity] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [alertVariant, setAlertVariant] = useState("");
-
   const [postcode, setPostcode] = useState("");
 
   const handleSubmit = async (e) => {

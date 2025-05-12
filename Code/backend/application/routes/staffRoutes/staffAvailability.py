@@ -58,6 +58,17 @@ def cancel_doctor_availability(doctor_id, date, slot_id):
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
+
+            cursor.execute("""
+                SELECT AppointmentID FROM Appointment
+                WHERE DoctorID = ? AND Date = ? AND SlotID = ?
+            """, (doctor_id, date, slot_id))
+            existing_appointments = cursor.fetchall()
+
+            if existing_appointments:
+                return jsonify({'message': 'Availability cannot be cancelled for this date, as appointment from patient has already been booked. If you still want to delete your availability and appointment, redirect to Get Appointments page and delete the specific appointment'}), 400
+
+
             cursor.execute(
                 "DELETE FROM DoctorAvailability WHERE DoctorID = ? AND Date = ? AND SlotID = ?",
                 doctor_id, date, slot_id
