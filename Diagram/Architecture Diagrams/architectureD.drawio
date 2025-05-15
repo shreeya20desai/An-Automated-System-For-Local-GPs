@@ -1,0 +1,201 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36" version="27.0.5">
+  <diagram name="Page-1" id="izHoScZf2CAuAq_ldkgC">
+    <mxGraphModel dx="3807" dy="1535" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="FypztEzzwrIMTHwMBpt8-13" value="Resource Group" style="fontStyle=0;verticalAlign=top;align=center;spacingTop=-2;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#919191;strokeWidth=2;dashed=1;container=1;collapsible=0;expand=0;recursiveResize=0;" vertex="1" parent="1">
+          <mxGeometry x="200" y="410" width="580" height="576" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-10" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/containers/Container_Registries.svg;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="50" y="218" width="68" height="61" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-12" value="" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/ResourceGroup.svg;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="530" y="10" width="37.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-15" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/databases/SQL_Server.svg;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="451.75" y="510" width="38" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-7" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Container_App_Environments.svg;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="110" y="370" width="68" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-8" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Worker_Container_App.svg;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="270" y="240" width="68" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-4" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/databases/Azure_Cosmos_DB.svg;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="310" y="442" width="68" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-3" value="" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.sql_database_sql_azure;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="440" y="370" width="67.5" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-5" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/storage/Storage_Accounts.svg;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="186.5" y="490" width="35" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-6" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Communication_Services.svg;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="501.75" y="279" width="44.41" height="32.65" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-9" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/containers/App_Services.svg;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="265" y="70" width="64" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-27" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.035;entryY=0.927;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="FypztEzzwrIMTHwMBpt8-13" source="FypztEzzwrIMTHwMBpt8-10" target="FypztEzzwrIMTHwMBpt8-9">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="110" y="250" as="sourcePoint" />
+            <mxPoint x="160" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-28" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.984;exitY=0.325;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="FypztEzzwrIMTHwMBpt8-13" source="FypztEzzwrIMTHwMBpt8-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="320" as="sourcePoint" />
+            <mxPoint x="270" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-31" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.558;exitY=0.912;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="FypztEzzwrIMTHwMBpt8-13" source="FypztEzzwrIMTHwMBpt8-8" target="FypztEzzwrIMTHwMBpt8-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="110" y="250" as="sourcePoint" />
+            <mxPoint x="160" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-32" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.517;exitY=0.937;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.11;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="FypztEzzwrIMTHwMBpt8-13" source="FypztEzzwrIMTHwMBpt8-8" target="FypztEzzwrIMTHwMBpt8-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="110" y="250" as="sourcePoint" />
+            <mxPoint x="160" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-35" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.205;exitY=0.082;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="FypztEzzwrIMTHwMBpt8-13" source="FypztEzzwrIMTHwMBpt8-15">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="480" as="sourcePoint" />
+            <mxPoint x="460" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-37" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.599;exitY=0.968;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.903;entryY=0.132;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="FypztEzzwrIMTHwMBpt8-13" source="FypztEzzwrIMTHwMBpt8-8" target="FypztEzzwrIMTHwMBpt8-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="310" as="sourcePoint" />
+            <mxPoint x="240" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-26" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.518;exitY=0.985;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="FypztEzzwrIMTHwMBpt8-13" source="FypztEzzwrIMTHwMBpt8-9">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="295" y="140" as="sourcePoint" />
+            <mxPoint x="299" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-39" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.572;exitY=0.029;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.662;entryY=1.009;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="FypztEzzwrIMTHwMBpt8-13" source="FypztEzzwrIMTHwMBpt8-8" target="FypztEzzwrIMTHwMBpt8-9">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="140" y="120" as="sourcePoint" />
+            <mxPoint x="190" y="70" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-44" value="Azure Container Registry" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="58" y="292.65" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-45" value="serves docker images" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="130" y="150" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-46" value="file storage" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="205" y="380" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-47" value="Azure App Service" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="338" y="104" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-48" value="&lt;b&gt;Azure Container Apps&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="338" y="219" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-50" value="Azure Container Environment" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="58" y="460" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-52" value="&lt;b&gt;Azure Storage Account&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="190" y="530" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-53" value="&lt;b&gt;Azure Cosmos DB&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="329" y="518" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-55" value="&lt;b&gt;Azure SQL SERVER&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="489.75" y="490" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-56" value="&lt;b&gt;Azure Communication&lt;br&gt;Service&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="493.96" y="210" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-59" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.285;exitY=0.982;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.991;entryY=0.144;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="FypztEzzwrIMTHwMBpt8-13" source="FypztEzzwrIMTHwMBpt8-8" target="FypztEzzwrIMTHwMBpt8-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="270" y="280" as="sourcePoint" />
+            <mxPoint x="320" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-60" value="runs on" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="174" y="322.65" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-61" value="prescriptions&lt;div&gt;DB&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="338" y="370" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-96" value="SQL DB" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="370" y="322.65" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-97" value="used to send emails" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="FypztEzzwrIMTHwMBpt8-13">
+          <mxGeometry x="389" y="262.65" width="78.25" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-11" value="" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;" vertex="1" parent="1">
+          <mxGeometry x="80" y="644.5" width="50" height="41" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-14" value="" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/internet_cloud.svg;" vertex="1" parent="1">
+          <mxGeometry x="465" y="200" width="50" height="31.5" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="FypztEzzwrIMTHwMBpt8-16" target="FypztEzzwrIMTHwMBpt8-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-16" value="" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.laptop;pointerEvents=1;" vertex="1" parent="1">
+          <mxGeometry x="-40" y="650" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-17" value="GitLab" style="shape=rect;fillColor=#EE5396;aspect=fixed;resizable=0;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="-38" y="520" width="48" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-18" value="" style="fillColor=#ffffff;strokeColor=none;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;shape=mxgraph.ibm_cloud.logo--gitlab" vertex="1" parent="FypztEzzwrIMTHwMBpt8-17">
+          <mxGeometry width="24" height="24" relative="1" as="geometry">
+            <mxPoint x="12" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-24" value="" style="endArrow=classic;html=1;rounded=0;exitX=1.066;exitY=0.487;exitDx=0;exitDy=0;exitPerimeter=0;entryX=-0.026;entryY=0.595;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="FypztEzzwrIMTHwMBpt8-11" target="FypztEzzwrIMTHwMBpt8-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="330" y="740" as="sourcePoint" />
+            <mxPoint x="380" y="690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-25" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="FypztEzzwrIMTHwMBpt8-16" target="FypztEzzwrIMTHwMBpt8-17">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="660" as="sourcePoint" />
+            <mxPoint x="360" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-36" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" target="FypztEzzwrIMTHwMBpt8-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="510" y="710" as="sourcePoint" />
+            <mxPoint x="440" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-38" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.533;exitY=0.027;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="493.35400000000016" y="459.96199999999993" as="sourcePoint" />
+            <mxPoint x="493" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-41" value="Docker Build" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="10" y="630" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-42" value="Docker Tag &amp;amp; Push" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="140" y="620" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-57" value="&lt;b&gt;Azure SQL Database&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="707.75" y="800" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-58" value="serves docker images" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="371.5" y="638" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-98" value="System" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-44" y="700" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FypztEzzwrIMTHwMBpt8-100" value="Internet" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="455" y="150" width="60" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
