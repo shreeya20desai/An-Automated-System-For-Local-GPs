@@ -1,5 +1,4 @@
-This ReadMe file is divided in two sections, A) Steps to run through deployed application on Azure and B) Steps to run the Automated System for Local GPs locally.
-
+This ReadMe file provides the Steps to run through deployed application on Azure  
 
 
 A)  Steps to run through deployed application on Azure
